@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.5 (Python 3.11.4 on win32)" generated="2026-09-22T17:44:59.020306" rpa="false" schemaversion="5">
+<suite id="s1" name="Get Persons" source="D:\code\robot\tests\get_persons.robot">
+<kw name="Setup Test Environment" type="SETUP">
+<kw name="Create API Session" owner="api">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-09-22T17:44:59.148283" level="INFO">Creating Session using : alias=aut, url=http://127.0.0.1:8000, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>${SESSION}</arg>
+<arg>${BASE_URL}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-09-22T17:44:59.148283" elapsed="0.000000"/>
+</kw>
+<status status="PASS" start="2026-09-22T17:44:59.148283" elapsed="0.000000"/>
+</kw>
+<kw name="Get Auth Token" owner="api">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-09-22T17:44:59.148283" level="INFO">&amp;{form} = { username=admin | password=admin }</msg>
+<var>&amp;{form}</var>
+<arg>username=${username}</arg>
+<arg>password=${password}</arg>
+<doc>Creates and returns a dictionary based on the given `items`.</doc>
+<status status="PASS" start="2026-09-22T17:44:59.148283" elapsed="0.000000"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-09-22T17:44:59.211528" level="INFO">POST Request : url=http://127.0.0.1:8000/token 
+ path_url=/token 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '29', 'Content-Type': 'application/x-www-form-urlencoded'} 
+ body=username=admin&amp;password=admin 
+ </msg>
+<msg time="2026-09-22T17:44:59.211528" level="INFO">POST Response : url=http://127.0.0.1:8000/token 
+ status=200, reason=OK 
+ headers={'date': 'Tue, 22 Sep 2026 15:44:58 GMT', 'server': 'uvicorn', 'content-length': '185', 'content-type': 'application/json'} 
+ body={"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5MzY5OX0.r7M0zwypHMXm52fni0vxDE9UrmJtAi2FGF6KvHGATD0","token_type":"bearer"} 
+ </msg>
+<msg time="2026-09-22T17:44:59.211528" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>${SESSION}</arg>
+<arg>/token</arg>
+<arg>data=&amp;{form}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-09-22T17:44:59.148283" elapsed="0.063245"/>
+</kw>
+<return>
+<value>${resp.json()}[access_token]</value>
+<status status="PASS" start="2026-09-22T17:44:59.211528" elapsed="0.000000"/>
+</return>
+<msg time="2026-09-22T17:44:59.211528" level="INFO">${ADMIN_TOKEN} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5MzY5OX0.r7M0zwypHMXm52fni0vxDE9UrmJtAi2FGF6KvHGATD0</msg>
+<var>${ADMIN_TOKEN}</var>
+<arg>${ADMIN_USER}</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Logs in via POST /token and returns the JWT access token.</doc>
+<status status="PASS" start="2026-09-22T17:44:59.148283" elapsed="0.063245"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-09-22T17:44:59.211528" level="INFO">${ADMIN_TOKEN} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5MzY5OX0.r7M0zwypHMXm52fni0vxDE9UrmJtAi2FGF6KvHGATD0</msg>
+<arg>${ADMIN_TOKEN}</arg>
+<doc>Makes the variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-09-22T17:44:59.211528" elapsed="0.000000"/>
+</kw>
+<kw name="Get Auth Token" owner="api">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-09-22T17:44:59.211528" level="INFO">&amp;{form} = { username=user | password=user2 }</msg>
+<var>&amp;{form}</var>
+<arg>username=${username}</arg>
+<arg>password=${password}</arg>
+<doc>Creates and returns a dictionary based on the given `items`.</doc>
+<status status="PASS" start="2026-09-22T17:44:59.211528" elapsed="0.015904"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-09-22T17:44:59.294153" level="INFO">POST Request : url=http://127.0.0.1:8000/token 
+ path_url=/token 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '28', 'Content-Type': 'application/x-www-form-urlencoded'} 
+ body=username=user&amp;password=user2 
+ </msg>
+<msg time="2026-09-22T17:44:59.294153" level="INFO">POST Response : url=http://127.0.0.1:8000/token 
+ status=401, reason=Unauthorized 
+ headers={'date': 'Tue, 22 Sep 2026 15:44:58 GMT', 'server': 'uvicorn', 'www-authenticate': 'Bearer', 'content-length': '43', 'content-type': 'application/json'} 
+ body={"detail":"Incorrect username or password"} 
+ </msg>
+<msg time="2026-09-22T17:44:59.294153" level="FAIL">Url: http://127.0.0.1:8000/token Expected status: 401 != 200</msg>
+<var>${resp}</var>
+<arg>${SESSION}</arg>
+<arg>/token</arg>
+<arg>data=&amp;{form}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="FAIL" start="2026-09-22T17:44:59.227432" elapsed="0.066721">Url: http://127.0.0.1:8000/token Expected status: 401 != 200</status>
+</kw>
+<return>
+<value>${resp.json()}[access_token]</value>
+<status status="NOT RUN" start="2026-09-22T17:44:59.294153" elapsed="0.000000"/>
+</return>
+<var>${USER_TOKEN}</var>
+<arg>${TEST_USER}</arg>
+<arg>${TEST_PASSWORD}</arg>
+<doc>Logs in via POST /token and returns the JWT access token.</doc>
+<status status="FAIL" start="2026-09-22T17:44:59.211528" elapsed="0.082625">Url: http://127.0.0.1:8000/token Expected status: 401 != 200</status>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<arg>${USER_TOKEN}</arg>
+<doc>Makes the variable available everywhere within the scope of the current suite.</doc>
+<status status="NOT RUN" start="2026-09-22T17:44:59.294153" elapsed="0.000000"/>
+</kw>
+<kw name="Reset Database" owner="api">
+<arg>${ADMIN_TOKEN}</arg>
+<doc>Wipes and re-seeds the AUT's in-memory database (admin only).</doc>
+<status status="NOT RUN" start="2026-09-22T17:44:59.294153" elapsed="0.000000"/>
+</kw>
+<status status="FAIL" start="2026-09-22T17:44:59.148283" elapsed="0.145870">Url: http://127.0.0.1:8000/token Expected status: 401 != 200</status>
+</kw>
+<test id="s1-t1" name="GET Persons Without Token Should Be Unauthorized" line="12">
+<doc>/persons requires authentication.</doc>
+<status status="FAIL" start="2026-09-22T17:44:59.294153" elapsed="0.000000">Parent suite setup failed:
+Url: http://127.0.0.1:8000/token Expected status: 401 != 200</status>
+</test>
+<test id="s1-t2" name="GET Persons As Read Only User Should Succeed" line="16">
+<doc>The read-only "user" account can GET, per the role rules.</doc>
+<status status="FAIL" start="2026-09-22T17:44:59.294153" elapsed="0.000000">Parent suite setup failed:
+Url: http://127.0.0.1:8000/token Expected status: 401 != 200</status>
+</test>
+<test id="s1-t3" name="GET Persons As Admin Should Succeed" line="23">
+<doc>The admin account can GET too, not just write.</doc>
+<status status="FAIL" start="2026-09-22T17:44:59.294153" elapsed="0.000000">Parent suite setup failed:
+Url: http://127.0.0.1:8000/token Expected status: 401 != 200</status>
+</test>
+<test id="s1-t4" name="GET Persons Should Return Seeded Persons With Nested Address" line="28">
+<doc>Response shape: each person embeds its full address, not just an id,
+and the seeded dataset (from POST /reset) is present.</doc>
+<status status="FAIL" start="2026-09-22T17:44:59.294153" elapsed="0.000000">Parent suite setup failed:
+Url: http://127.0.0.1:8000/token Expected status: 401 != 200</status>
+</test>
+<kw name="Delete All Sessions" owner="RequestsLibrary" type="TEARDOWN">
+<msg time="2026-09-22T17:44:59.294153" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects </doc>
+<status status="PASS" start="2026-09-22T17:44:59.294153" elapsed="0.000000"/>
+</kw>
+<doc>Tests for GET /persons on the Customer DB AUT.
+Requires the AUT to be running at http://127.0.0.1:8000 (see AUT/README.md).</doc>
+<status status="FAIL" start="2026-09-22T17:44:59.020306" elapsed="0.273847">Suite setup failed:
+Url: http://127.0.0.1:8000/token Expected status: 401 != 200</status>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="4" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Get Persons" id="s1" pass="0" fail="4" skip="0">Get Persons</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
