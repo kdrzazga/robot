@@ -49,9 +49,5 @@ GET Persons Should Return Seeded Persons With Nested Address
 
 *** Keywords ***
 Setup Test Environment
-    Create API Session
-    ${ADMIN_TOKEN}=    Get Auth Token    ${ADMIN_USER}    ${ADMIN_PASSWORD}
-    Set Suite Variable    ${ADMIN_TOKEN}
-    ${USER_TOKEN}=    Get Auth Token    ${TEST_USER}    ${TEST_PASSWORD}
-    Set Suite Variable    ${USER_TOKEN}
+    Login As Admin And User
     Reset Database    ${ADMIN_TOKEN}
