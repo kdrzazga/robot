@@ -1,0 +1,59 @@
+name: Robot Framework tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  robot:
+    runs-on: ubuntu-latest
+
+    services:
+      # Stands in for the TaxInformation service on port 8001, where the
+      # customer DB service looks for it. No stubs are loaded here:
+      # test_with_stub.robot registers its own from tests/resources/wiremock/.
+      wiremock:
+        image: wiremock/wiremock:3.13.2
+        ports:
+          - 8001:8080
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: |
+            AUT/requirements.txt
+            tests/requirements.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r AUT/requirements.txt -r tests/requirements.txt
+
+      - name: Start customer DB service (AUT)
+        working-directory: AUT
+        env:
+          TAX_SERVICE_URL: http://127.0.0.1:8001
+        run: |
+          nohup python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 > ../aut.log 2>&1 &
+
+      - name: Wait for AUT and WireMock
+        run: |
+          curl --silent --fail --retry 30 --retry-delay 1 --retry-connrefused \
+            http://127.0.0.1:8000/docs > /dev/null
+          curl --silent --fail --retry 30 --retry-delay 1 --retry-connrefused \
+            http://127.0.0.1:8001/__admin/mappings > /dev/null
+
+      - name: Run Robot Framework suite
+        run: python -m robot --outputdir results tests
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: robot-results
+          path: |
+            results/
+            aut.log

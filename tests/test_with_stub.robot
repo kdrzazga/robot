@@ -2,9 +2,12 @@
 Documentation     Tests the person service's tax lookup (GET /persons/{id}/tax) with the
 ...               TaxInformation service replaced by WireMock, which always answers with
 ...               the tax_id set in ${TAX_STUB_FILE} ("mock_tax_number").
-...               Requires the customer DB (run.py) at ${BASE_URL} and Java on PATH.
-...               The real tax service (run_tax.py) must NOT be running: WireMock takes
-...               its port, 8001, which is where the person service looks for it.
+...               Requires the customer DB (run.py) at ${BASE_URL}.
+...               WireMock must listen on port 8001, where the person service looks for
+...               the tax service, so the real tax service (run_tax.py) must NOT run.
+...               By default WireMock is expected to be running already (standalone JAR
+...               locally, a service container in CI). Pass --variable START_WIREMOCK:True
+...               to have the suite start the JAR itself (needs Java on PATH).
 Resource          resources/api.resource
 Library           OperatingSystem
 Library           Process
@@ -18,6 +21,7 @@ ${WIREMOCK_JAR}       ${CURDIR}/resources/wiremock-standalone-3.13.2.jar
 ${WIREMOCK_PORT}      8001
 ${WIREMOCK_URL}       http://127.0.0.1:${WIREMOCK_PORT}
 ${TAX_STUB_FILE}      ${CURDIR}/resources/wiremock/mappings/taxes.json
+${START_WIREMOCK}     ${FALSE}
 
 *** Test Cases ***
 Person Tax Lookup Should Return Data From Tax Service Stub
@@ -34,14 +38,15 @@ Person Tax Lookup Should Return Data From Tax Service Stub
 
 *** Keywords ***
 Setup Stubbed Environment
-    # Start WireMock
+    IF    ${START_WIREMOCK}    Start WireMock
+    Connect To WireMock
     Stub Tax Service To Always Return Mock Tax Number
     Login As Admin And User
     Reset Database    ${ADMIN_TOKEN}
 
 Teardown Stubbed Environment
     Delete All Sessions
-    Terminate Process    wiremock
+    IF    ${START_WIREMOCK}    Terminate Process    wiremock
 
 Start WireMock
     [Documentation]    Runs the WireMock JAR in the background and waits until its admin
@@ -50,12 +55,19 @@ Start WireMock
     ...    --port    ${WIREMOCK_PORT}    --disable-banner
     ...    alias=wiremock    cwd=${OUTPUT DIR}
     ...    stdout=${OUTPUT DIR}/wiremock.log    stderr=STDOUT
-    Wait Until Keyword Succeeds    30s    1s    WireMock Should Be Up
-    Create Mock Session    ${WIREMOCK_URL}
+    Wait Until Keyword Succeeds    30s    1s    Started WireMock Should Be Up
 
-WireMock Should Be Up
+Started WireMock Should Be Up
     Process Should Be Running    wiremock
     ...    error_message=WireMock exited. Is port ${WIREMOCK_PORT} taken (e.g. by run_tax.py)? See wiremock.log.
+    WireMock Admin API Should Answer
+
+Connect To WireMock
+    [Documentation]    Waits for WireMock's admin API, then points WireMockLibrary at it.
+    Wait Until Keyword Succeeds    30s    1s    WireMock Admin API Should Answer
+    Create Mock Session    ${WIREMOCK_URL}
+
+WireMock Admin API Should Answer
     GET    ${WIREMOCK_URL}/__admin/mappings    expected_status=200
 
 Stub Tax Service To Always Return Mock Tax Number
