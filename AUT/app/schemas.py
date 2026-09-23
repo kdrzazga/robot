@@ -42,6 +42,15 @@ class PersonWithAddress(BaseModel):
     address: Address
 
 
+class TaxRecord(BaseModel):
+    """A record as returned by the TaxInformation service."""
+    id: int
+    name: str
+    last_name: str
+    tax_id: str
+    tax_amount: float
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str

@@ -9,7 +9,8 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from app import auth, models, schemas
-from app.auth import get_current_user, require_admin
+from app.auth import get_current_user, oauth2_scheme, require_admin
+from app.tax_client import fetch_tax_record
 from app.database import Base, SessionLocal, engine, get_db
 from app.seed import seed_data
 
@@ -140,6 +141,20 @@ def get_person(person_id: int, db: Session = Depends(get_db), _user=Depends(get_
     if not person:
         raise HTTPException(status_code=404, detail="Person not found")
     return person
+
+
+@app.get("/persons/{person_id}/tax", response_model=schemas.TaxRecord, tags=["persons"])
+def get_person_tax(
+    person_id: int,
+    db: Session = Depends(get_db),
+    token: str = Depends(oauth2_scheme),
+    _user=Depends(get_current_user),
+):
+    """Looks up the person's TAX_ID in the TaxInformation service (TAX_SERVICE_URL)."""
+    person = db.query(models.Person).filter(models.Person.id == person_id).first()
+    if not person:
+        raise HTTPException(status_code=404, detail="Person not found")
+    return fetch_tax_record(person.tax_id, token)
 
 
 @app.post("/persons", response_model=schemas.Person, status_code=201, tags=["persons"])

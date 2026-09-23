@@ -81,6 +81,11 @@ also works while the servers run; add `?mock=1` to try it without them.
 - `GET/POST /addresses`, `GET/PUT/DELETE /addresses/{id}`
 - `GET/POST /persons`, `GET/PUT/DELETE /persons/{id}` (person responses on
   GET include the full nested address, not just the address_id)
+- `GET /persons/{id}/tax` — looks up the person's TAX_ID in the TaxInformation
+  service and returns its record (forwards the caller's token). The tax
+  service URL comes from the `TAX_SERVICE_URL` environment variable (default
+  http://127.0.0.1:8001), so tests can point it at a stub. Returns 502 if the
+  tax service can't be reached.
 
 TaxInformation (port 8001):
 
