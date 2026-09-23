@@ -1,3 +1,9 @@
+#api.resource is the shared setup file for your Robot Framework suites.
+#It holds the connection and login steps, so no test file has to repeat them.
+#it can be imported with
+#*** Settings ***
+#Resource          resources/api.resource
+
 *** Settings ***
 Library    RequestsLibrary
 Library    Collections
