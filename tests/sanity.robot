@@ -1,6 +1,7 @@
 *** Settings ***
 Library    Collections
 Library    RequestsLibrary
+Library    OperatingSystem
 
 *** Test Cases ***
 Basic Sanity Check
@@ -16,7 +17,9 @@ Basic Sanity Check 2
     Should Be True    ${a} + ${b}    6
 
 Basic Sanity Check 4
-    ${file}
-    
+    ${file}=    Get File    log.html
+
+    Should Start With    ${file}    <!DOCTYPE html>
+
 Basic Sanity Check 5
     GET    http://www.msftconnecttest.com/connecttest.txt    expected_status=200
