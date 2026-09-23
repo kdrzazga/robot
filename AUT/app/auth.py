@@ -5,6 +5,9 @@ Two fixed users for testing purposes:
   - admin / admin  -> role "admin", full access (GET/POST/PUT/DELETE)
   - user  / user   -> role "user",  read-only access (GET only)
 
+Both services (customer DB and TaxInformation) share this module and its
+SECRET_KEY, so a token issued by either one is accepted by the other.
+
 Passwords are hashed with the standard library's hashlib (PBKDF2-HMAC-SHA256)
 rather than a compiled package like bcrypt, so no C/Rust build toolchain is
 ever needed to install this project's dependencies.
@@ -19,11 +22,11 @@ import os
 from datetime import datetime, timedelta, timezone
 
 import jwt
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt.exceptions import InvalidTokenError
 
-from app.schemas import TokenData
+from app.schemas import Token, TokenData
 
 SECRET_KEY = "aut-demo-secret-key-change-me"
 ALGORITHM = "HS256"
@@ -96,3 +99,22 @@ def require_admin(current_user: TokenData = Depends(get_current_user)) -> TokenD
             detail="Admin privileges required",
         )
     return current_user
+
+
+router = APIRouter(tags=["auth"])
+
+
+@router.post("/token", response_model=Token)
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token = create_access_token(
+        data={"sub": user["username"], "role": user["role"]},
+        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+    )
+    return {"access_token": access_token, "token_type": "bearer"}

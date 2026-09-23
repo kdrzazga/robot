@@ -1918,7 +1918,7 @@ storage = function () {
 window.output = {};
 </script>
 <script type="text/javascript">
-window.output["suite"] = [1,2,3,4,[],[1,0,483],[],[[5,0,6,[],[],[1,383,20],[]],[7,0,8,[],[],[1,403,13],[]],[9,0,10,[],[],[1,416,26],[]],[11,0,12,[],[],[1,442,11],[]],[13,0,14,[],[],[1,453,18],[]],[15,0,16,[],[],[1,471,10],[]]],[],[6,6,0,0]];
+window.output["suite"] = [1,2,3,4,[],[1,0,4887],[],[[5,0,6,[],[],[1,4532,76],[]],[7,0,8,[],[],[1,4609,49],[]],[9,0,10,[],[],[1,4658,81],[]],[11,0,12,[],[],[1,4740,49],[]],[13,0,14,[],[],[1,4790,57],[]],[15,0,16,[],[],[1,4848,39],[]]],[],[6,6,0,0]];
 </script>
 <script type="text/javascript">
 window.output["strings"] = [];
@@ -1927,13 +1927,13 @@ window.output["strings"] = [];
 window.output["strings"] = window.output["strings"].concat(["*","*Post Persons","*D:\\code\\robot\\tests\\post_persons.robot","*post_persons.robot","*<p>Tests for POST /persons on the Customer DB AUT. Requires the AUT to be running at <a href=\"http://127.0.0.1:8000\">http://127.0.0.1:8000\x3c/a> (see AUT/README.md).\x3c/p>","*POST Person Without Token Should Be Unauthorized","*<p>Creating a person requires authentication.\x3c/p>","*POST Person As Read Only User Should Be Forbidden","*<p>The read-only \"user\" account cannot write, per the role rules.\x3c/p>","*POST Person As Admin Should Create And Persist It","*<p>The create response is the flat Person schema (no nested address), unlike GET /persons/{id}. This checks the flat response, then re-fetches via GET to confirm it round-trips with the right address.\x3c/p>","*POST Person As Admin Missing Required Field Should Be Rejected","*<p>Omitting \"last_name\" should fail schema validation (422), and must not create a partial record.\x3c/p>","*POST Person As Admin With Nonexistent Address Should Be Rejected","*<p>address_id is checked against real data at request time, not just schema validation, so a nonexistent id should be a 400, not 201.\x3c/p>","*POST Person As Admin With Empty Name Is Currently Accepted","*<p>Documents present behavior: the AUT does not yet reject empty field values. If validation is added later, update this test to expect 422 instead of 201.\x3c/p>"]);
 </script>
 <script type="text/javascript">
-window.output["stats"] = [[{"elapsed":"00:00:00","fail":0,"label":"All Tests","pass":6,"skip":0}],[],[{"elapsed":"00:00:00","fail":0,"id":"s1","label":"Post Persons","name":"Post Persons","pass":6,"skip":0}]];
+window.output["stats"] = [[{"elapsed":"00:00:00","fail":0,"label":"All Tests","pass":6,"skip":0}],[],[{"elapsed":"00:00:05","fail":0,"id":"s1","label":"Post Persons","name":"Post Persons","pass":6,"skip":0}]];
 </script>
 <script type="text/javascript">
-window.output["baseMillis"] = 1790093329920;
+window.output["baseMillis"] = 1790151134849;
 </script>
 <script type="text/javascript">
-window.output["generated"] = 503;
+window.output["generated"] = 4955;
 </script>
 <script type="text/javascript">
 window.output["expand_keywords"] = null;

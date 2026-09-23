@@ -20,6 +20,7 @@ class Address(AddressBase):
 class PersonBase(BaseModel):
     name: str
     last_name: str
+    tax_id: str
     address_id: int
 
 
@@ -37,7 +38,21 @@ class PersonWithAddress(BaseModel):
     id: int
     name: str
     last_name: str
+    tax_id: str
     address: Address
+
+
+class TaxRecordUpdate(BaseModel):
+    """A tax record as sent to the TaxInformation service, which validates it."""
+    name: str
+    last_name: str
+    tax_id: str
+    tax_amount: float
+
+
+class TaxRecord(TaxRecordUpdate):
+    """A tax record as returned by the TaxInformation service."""
+    id: int
 
 
 class Token(BaseModel):

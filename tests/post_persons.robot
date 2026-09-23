@@ -29,7 +29,7 @@ POST Person As Admin Should Create And Persist It
     ...                unlike GET /persons/{id}. This checks the flat response, then
     ...                re-fetches via GET to confirm it round-trips with the right address.
     &{headers}=    Auth Headers    ${ADMIN_TOKEN}
-    &{payload}=    Create Dictionary    name=Test    last_name=User    address_id=${1}
+    &{payload}=    Create Dictionary    name=Test    last_name=User    tax_id=T1    address_id=${1}
     ${resp}=    POST On Session    ${SESSION}    ${PERSONS_ENDPOINT}    json=&{payload}
     ...    headers=&{headers}    expected_status=201
     ${created}=    Set Variable    ${resp.json()}
@@ -51,7 +51,7 @@ POST Person As Admin Missing Required Field Should Be Rejected
     [Documentation]    Omitting "last_name" should fail schema validation (422),
     ...                and must not create a partial record.
     &{headers}=    Auth Headers    ${ADMIN_TOKEN}
-    &{payload}=    Create Dictionary    name=Test    address_id=${1}
+    &{payload}=    Create Dictionary    name=Test    tax_id=T1    address_id=${1}
     POST On Session    ${SESSION}    ${PERSONS_ENDPOINT}    json=&{payload}
     ...    headers=&{headers}    expected_status=422
     Person Count Should Be    3
@@ -60,7 +60,7 @@ POST Person As Admin With Nonexistent Address Should Be Rejected
     [Documentation]    address_id is checked against real data at request time, not just
     ...                schema validation, so a nonexistent id should be a 400, not 201.
     &{headers}=    Auth Headers    ${ADMIN_TOKEN}
-    &{payload}=    Create Dictionary    name=Test    last_name=User    address_id=${999}
+    &{payload}=    Create Dictionary    name=Test    last_name=User    tax_id=T1    address_id=${999}
     ${resp}=    POST On Session    ${SESSION}    ${PERSONS_ENDPOINT}    json=&{payload}
     ...    headers=&{headers}    expected_status=400
     Should Contain    ${resp.json()}[detail]    does not reference an existing address
@@ -71,7 +71,7 @@ POST Person As Admin With Empty Name Is Currently Accepted
     ...                field values. If validation is added later, update this test
     ...                to expect 422 instead of 201.
     &{headers}=    Auth Headers    ${ADMIN_TOKEN}
-    &{payload}=    Create Dictionary    name=${EMPTY}    last_name=User    address_id=${1}
+    &{payload}=    Create Dictionary    name=${EMPTY}    last_name=User    tax_id=T1    address_id=${1}
     ${resp}=    POST On Session    ${SESSION}    ${PERSONS_ENDPOINT}    json=&{payload}
     ...    headers=&{headers}    expected_status=201
     Should Be Equal As Strings    ${resp.json()}[name]    ${EMPTY}
