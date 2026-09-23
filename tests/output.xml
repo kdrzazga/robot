@@ -1,1021 +1,125 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 7.5 (Python 3.11.4 on win32)" generated="2026-09-22T18:08:49.920041" rpa="false" schemaversion="5">
-<suite id="s1" name="Post Persons" source="D:\code\robot\tests\post_persons.robot">
-<kw name="Login As Admin And User" owner="api" type="SETUP">
+<robot generator="Robot 7.5 (Python 3.11.4 on win32)" generated="2026-09-23T06:26:40.161025" rpa="false" schemaversion="5">
+<suite id="s1" name="Get Persons" source="D:\code\robot\tests\get_persons.robot">
+<kw name="Setup Test Environment" type="SETUP">
+<kw name="Login As Admin And User" owner="api">
 <kw name="Create API Session" owner="api">
 <kw name="Create Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.165563" level="INFO">Creating Session using : alias=aut, url=http://127.0.0.1:8000, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<msg time="2026-09-23T06:26:40.368448" level="INFO">Creating Session using : alias=aut, url=http://127.0.0.1:8000, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
 <arg>${SESSION}</arg>
 <arg>${BASE_URL}</arg>
 <doc>Create Session: create a HTTP session to a server</doc>
-<status status="PASS" start="2026-09-22T18:08:50.165563" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T06:26:40.368448" elapsed="0.000000"/>
 </kw>
-<status status="PASS" start="2026-09-22T18:08:50.165563" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T06:26:40.368448" elapsed="0.000000"/>
 </kw>
 <kw name="Get Auth Token" owner="api">
 <kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.165563" level="INFO">&amp;{form} = { username=admin | password=admin }</msg>
+<msg time="2026-09-23T06:26:40.368448" level="INFO">&amp;{form} = { username=admin | password=admin }</msg>
 <var>&amp;{form}</var>
 <arg>username=${username}</arg>
 <arg>password=${password}</arg>
 <doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.165563" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T06:26:40.368448" elapsed="0.000000"/>
 </kw>
 <kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.234502" level="INFO">POST Request : url=http://127.0.0.1:8000/token 
- path_url=/token 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '29', 'Content-Type': 'application/x-www-form-urlencoded'} 
- body=username=admin&amp;password=admin 
- </msg>
-<msg time="2026-09-22T18:08:50.234502" level="INFO">POST Response : url=http://127.0.0.1:8000/token 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:49 GMT', 'server': 'uvicorn', 'content-length': '185', 'content-type': 'application/json'} 
- body={"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ","token_type":"bearer"} 
- </msg>
-<msg time="2026-09-22T18:08:50.234502" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<msg time="2026-09-23T06:26:42.425517" level="WARN">Retrying (RetryAdapter(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFD3D6ED0&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /token</msg>
+<msg time="2026-09-23T06:26:44.664885" level="WARN">Retrying (RetryAdapter(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFA431090&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /token</msg>
+<msg time="2026-09-23T06:26:47.116019" level="WARN">Retrying (RetryAdapter(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFA431E10&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /token</msg>
+<msg time="2026-09-23T06:26:49.153939" level="FAIL">ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</msg>
 <var>${resp}</var>
 <arg>${SESSION}</arg>
 <arg>/token</arg>
 <arg>data=&amp;{form}</arg>
 <arg>expected_status=200</arg>
 <doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.165563" elapsed="0.068939"/>
+<status status="FAIL" start="2026-09-23T06:26:40.368448" elapsed="8.889646">ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
 </kw>
 <return>
 <value>${resp.json()}[access_token]</value>
-<status status="PASS" start="2026-09-22T18:08:50.234502" elapsed="0.000000"/>
+<status status="NOT RUN" start="2026-09-23T06:26:49.258094" elapsed="0.000000"/>
 </return>
-<msg time="2026-09-22T18:08:50.234502" level="INFO">${admin_token} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ</msg>
 <var>${admin_token}</var>
 <arg>${ADMIN_USER}</arg>
 <arg>${ADMIN_PASSWORD}</arg>
 <doc>Logs in via POST /token and returns the JWT access token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.165563" elapsed="0.068939"/>
+<status status="FAIL" start="2026-09-23T06:26:40.368448" elapsed="8.889646">ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
 </kw>
 <kw name="Set Suite Variable" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.234502" level="INFO">${ADMIN_TOKEN} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ</msg>
 <arg>${ADMIN_TOKEN}</arg>
 <arg>${admin_token}</arg>
 <doc>Makes the variable available everywhere within the scope of the current suite.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.234502" elapsed="0.000000"/>
+<status status="NOT RUN" start="2026-09-23T06:26:49.258094" elapsed="0.000000"/>
 </kw>
 <kw name="Get Auth Token" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.234502" level="INFO">&amp;{form} = { username=user | password=user }</msg>
-<var>&amp;{form}</var>
-<arg>username=${username}</arg>
-<arg>password=${password}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.234502" elapsed="0.000000"/>
-</kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.303408" level="INFO">POST Request : url=http://127.0.0.1:8000/token 
- path_url=/token 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '27', 'Content-Type': 'application/x-www-form-urlencoded'} 
- body=username=user&amp;password=user 
- </msg>
-<msg time="2026-09-22T18:08:50.303408" level="INFO">POST Response : url=http://127.0.0.1:8000/token 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:49 GMT', 'server': 'uvicorn', 'content-length': '182', 'content-type': 'application/json'} 
- body={"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6InVzZXIiLCJleHAiOjE3OTAwOTUxMzB9.bUe9lrjA-2DVT_qRkcqjWrHvLg_aB75jcaklbVCcgwY","token_type":"bearer"} 
- </msg>
-<msg time="2026-09-22T18:08:50.303408" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
-<var>${resp}</var>
-<arg>${SESSION}</arg>
-<arg>/token</arg>
-<arg>data=&amp;{form}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.234502" elapsed="0.068906"/>
-</kw>
-<return>
-<value>${resp.json()}[access_token]</value>
-<status status="PASS" start="2026-09-22T18:08:50.303408" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.303408" level="INFO">${user_token} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6InVzZXIiLCJleHAiOjE3OTAwOTUxMzB9.bUe9lrjA-2DVT_qRkcqjWrHvLg_aB75jcaklbVCcgwY</msg>
 <var>${user_token}</var>
 <arg>${TEST_USER}</arg>
 <arg>${TEST_PASSWORD}</arg>
 <doc>Logs in via POST /token and returns the JWT access token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.234502" elapsed="0.068906"/>
+<status status="NOT RUN" start="2026-09-23T06:26:49.258094" elapsed="0.000000"/>
 </kw>
 <kw name="Set Suite Variable" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.303408" level="INFO">${USER_TOKEN} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6InVzZXIiLCJleHAiOjE3OTAwOTUxMzB9.bUe9lrjA-2DVT_qRkcqjWrHvLg_aB75jcaklbVCcgwY</msg>
 <arg>${USER_TOKEN}</arg>
 <arg>${user_token}</arg>
 <doc>Makes the variable available everywhere within the scope of the current suite.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.303408" elapsed="0.000000"/>
+<status status="NOT RUN" start="2026-09-23T06:26:49.258094" elapsed="0.000000"/>
 </kw>
 <doc>Creates the API session and logs in as both the admin and the
 read-only user, exposing ${ADMIN_TOKEN} / ${USER_TOKEN} as suite
 variables so test cases in any suite can reuse them.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.165563" elapsed="0.137845"/>
+<status status="FAIL" start="2026-09-23T06:26:40.368448" elapsed="8.889646">ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
 </kw>
-<test id="s1-t1" name="POST Person Without Token Should Be Unauthorized" line="13">
-<kw name="Reset Database" owner="api" type="SETUP">
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.303408" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.303408" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.303408" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.303408" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${admin_token}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.303408" elapsed="0.000000"/>
-</kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.314739" level="INFO">POST Request : url=http://127.0.0.1:8000/reset 
- path_url=/reset 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ', 'Content-Length': '0'} 
- body=None 
- </msg>
-<msg time="2026-09-22T18:08:50.314739" level="INFO">POST Response : url=http://127.0.0.1:8000/reset 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '18', 'content-type': 'application/json'} 
- body={"status":"reset"} 
- </msg>
-<arg>${SESSION}</arg>
-<arg>/reset</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.303408" elapsed="0.011331"/>
-</kw>
+<kw name="Reset Database" owner="api">
 <arg>${ADMIN_TOKEN}</arg>
 <doc>Wipes and re-seeds the AUT's in-memory database (admin only).</doc>
-<status status="PASS" start="2026-09-22T18:08:50.303408" elapsed="0.011331"/>
+<status status="NOT RUN" start="2026-09-23T06:26:49.258094" elapsed="0.000000"/>
 </kw>
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.314739" level="INFO">&amp;{payload} = { name=Test | last_name=User | address_id=1 }</msg>
-<var>&amp;{payload}</var>
-<arg>name=Test</arg>
-<arg>last_name=User</arg>
-<arg>address_id=${1}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.314739" elapsed="0.000000"/>
+<status status="FAIL" start="2026-09-23T06:26:40.368448" elapsed="8.889646">ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
 </kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.314739" level="INFO">POST Request : url=http://127.0.0.1:8000/persons 
- path_url=/persons 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '54', 'Content-Type': 'application/json'} 
- body=b'{"name": "Test", "last_name": "User", "address_id": 1}' 
- </msg>
-<msg time="2026-09-22T18:08:50.314739" level="INFO">POST Response : url=http://127.0.0.1:8000/persons 
- status=401, reason=Unauthorized 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'www-authenticate': 'Bearer', 'content-length': '30', 'content-type': 'application/json'} 
- body={"detail":"Not authenticated"} 
- </msg>
-<arg>${SESSION}</arg>
-<arg>${PERSONS_ENDPOINT}</arg>
-<arg>json=&amp;{payload}</arg>
-<arg>expected_status=401</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.314739" elapsed="0.000000"/>
-</kw>
-<kw name="Person Count Should Be">
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.314739" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.314739" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.314739" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.314739" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.314739" elapsed="0.000000"/>
-</kw>
-<kw name="GET On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.323085" level="INFO">GET Request : url=http://127.0.0.1:8000/persons 
- path_url=/persons 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ'} 
- body=None 
- </msg>
-<msg time="2026-09-22T18:08:50.323085" level="INFO">GET Response : url=http://127.0.0.1:8000/persons 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '434', 'content-type': 'application/json'} 
- body=[{"id":1,"name":"John","last_name":"Smith","address":{"street":"1 Main St","city":"Warsaw","zip_code":"00-001","country":"Poland","id":1}},{"id":2,"name":"Anna","last_name":"Kowalska","address":{"street":"22 Oak Ave","city":"Krakow","zip_code":"30-002","country":"Poland","id":2}},{"id":3,"name":"Sherlock","last_name":"Holmes","address":{"street":"5 Baker St","city":"London","zip_code":"NW1 6XE","country":"United Kingdom","id":3}}] 
- </msg>
-<msg time="2026-09-22T18:08:50.323085" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
-<var>${resp}</var>
-<arg>${SESSION}</arg>
-<arg>${PERSONS_ENDPOINT}</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a GET request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.314739" elapsed="0.008346"/>
-</kw>
-<kw name="Length Should Be" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.323085" level="INFO">Length is 3.</msg>
-<arg>${resp.json()}</arg>
-<arg>${expected_count}</arg>
-<doc>Verifies that the length of the given item is correct.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.323085" elapsed="0.000000"/>
-</kw>
-<arg>3</arg>
-<status status="PASS" start="2026-09-22T18:08:50.314739" elapsed="0.008346"/>
-</kw>
-<doc>Creating a person requires authentication.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.303408" elapsed="0.019677"/>
+<test id="s1-t1" name="GET Persons Without Token Should Be Unauthorized" line="12">
+<doc>/persons requires authentication.</doc>
+<status status="FAIL" start="2026-09-23T06:26:49.258094" elapsed="0.000000">Parent suite setup failed:
+ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
 </test>
-<test id="s1-t2" name="POST Person As Read Only User Should Be Forbidden" line="19">
-<kw name="Reset Database" owner="api" type="SETUP">
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.323085" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.323085" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.323085" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.323085" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${admin_token}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.323085" elapsed="0.000000"/>
-</kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.328768" level="INFO">POST Request : url=http://127.0.0.1:8000/reset 
- path_url=/reset 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ', 'Content-Length': '0'} 
- body=None 
- </msg>
-<msg time="2026-09-22T18:08:50.328768" level="INFO">POST Response : url=http://127.0.0.1:8000/reset 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '18', 'content-type': 'application/json'} 
- body={"status":"reset"} 
- </msg>
-<arg>${SESSION}</arg>
-<arg>/reset</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.323085" elapsed="0.005683"/>
-</kw>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Wipes and re-seeds the AUT's in-memory database (admin only).</doc>
-<status status="PASS" start="2026-09-22T18:08:50.323085" elapsed="0.005683"/>
-</kw>
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.330514" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6InVzZXIiLCJleHAiOjE3OTAwOTUxMzB9.bUe9lrjA-2DVT_qRkcqjWrHvLg_aB75jcaklbVCcgwY }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.328768" elapsed="0.001746"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.330514" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.330514" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6InVzZXIiLCJleHAiOjE3OTAwOTUxMzB9.bUe9lrjA-2DVT_qRkcqjWrHvLg_aB75jcaklbVCcgwY }</msg>
-<var>&amp;{headers}</var>
-<arg>${USER_TOKEN}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.328768" elapsed="0.001746"/>
-</kw>
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.330514" level="INFO">&amp;{payload} = { name=Test | last_name=User | address_id=1 }</msg>
-<var>&amp;{payload}</var>
-<arg>name=Test</arg>
-<arg>last_name=User</arg>
-<arg>address_id=${1}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.330514" elapsed="0.000000"/>
-</kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.330514" level="INFO">POST Request : url=http://127.0.0.1:8000/persons 
- path_url=/persons 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6InVzZXIiLCJleHAiOjE3OTAwOTUxMzB9.bUe9lrjA-2DVT_qRkcqjWrHvLg_aB75jcaklbVCcgwY', 'Content-Length': '54', 'Content-Type': 'application/json'} 
- body=b'{"name": "Test", "last_name": "User", "address_id": 1}' 
- </msg>
-<msg time="2026-09-22T18:08:50.330514" level="INFO">POST Response : url=http://127.0.0.1:8000/persons 
- status=403, reason=Forbidden 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '38', 'content-type': 'application/json'} 
- body={"detail":"Admin privileges required"} 
- </msg>
-<arg>${SESSION}</arg>
-<arg>${PERSONS_ENDPOINT}</arg>
-<arg>json=&amp;{payload}</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=403</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.330514" elapsed="0.000000"/>
-</kw>
-<kw name="Person Count Should Be">
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.330514" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.330514" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.330514" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.330514" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.330514" elapsed="0.000000"/>
-</kw>
-<kw name="GET On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.335927" level="INFO">GET Request : url=http://127.0.0.1:8000/persons 
- path_url=/persons 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ'} 
- body=None 
- </msg>
-<msg time="2026-09-22T18:08:50.335927" level="INFO">GET Response : url=http://127.0.0.1:8000/persons 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '434', 'content-type': 'application/json'} 
- body=[{"id":1,"name":"John","last_name":"Smith","address":{"street":"1 Main St","city":"Warsaw","zip_code":"00-001","country":"Poland","id":1}},{"id":2,"name":"Anna","last_name":"Kowalska","address":{"street":"22 Oak Ave","city":"Krakow","zip_code":"30-002","country":"Poland","id":2}},{"id":3,"name":"Sherlock","last_name":"Holmes","address":{"street":"5 Baker St","city":"London","zip_code":"NW1 6XE","country":"United Kingdom","id":3}}] 
- </msg>
-<msg time="2026-09-22T18:08:50.335927" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
-<var>${resp}</var>
-<arg>${SESSION}</arg>
-<arg>${PERSONS_ENDPOINT}</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a GET request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.330514" elapsed="0.005413"/>
-</kw>
-<kw name="Length Should Be" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.335927" level="INFO">Length is 3.</msg>
-<arg>${resp.json()}</arg>
-<arg>${expected_count}</arg>
-<doc>Verifies that the length of the given item is correct.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.335927" elapsed="0.000000"/>
-</kw>
-<arg>3</arg>
-<status status="PASS" start="2026-09-22T18:08:50.330514" elapsed="0.005413"/>
-</kw>
-<doc>The read-only "user" account cannot write, per the role rules.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.323085" elapsed="0.012842"/>
+<test id="s1-t2" name="GET Persons As Read Only User Should Succeed" line="16">
+<doc>The read-only "user" account can GET, per the role rules.</doc>
+<status status="FAIL" start="2026-09-23T06:26:49.258094" elapsed="0.000000">Parent suite setup failed:
+ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
 </test>
-<test id="s1-t3" name="POST Person As Admin Should Create And Persist It" line="27">
-<kw name="Reset Database" owner="api" type="SETUP">
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.335927" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.335927" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.335927" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.335927" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${admin_token}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.335927" elapsed="0.000000"/>
-</kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.343637" level="INFO">POST Request : url=http://127.0.0.1:8000/reset 
- path_url=/reset 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ', 'Content-Length': '0'} 
- body=None 
- </msg>
-<msg time="2026-09-22T18:08:50.343637" level="INFO">POST Response : url=http://127.0.0.1:8000/reset 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '18', 'content-type': 'application/json'} 
- body={"status":"reset"} 
- </msg>
-<arg>${SESSION}</arg>
-<arg>/reset</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.335927" elapsed="0.007710"/>
-</kw>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Wipes and re-seeds the AUT's in-memory database (admin only).</doc>
-<status status="PASS" start="2026-09-22T18:08:50.335927" elapsed="0.007710"/>
-</kw>
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.343637" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.343637" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.343637" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.343637" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.343637" elapsed="0.000000"/>
-</kw>
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.343637" level="INFO">&amp;{payload} = { name=Test | last_name=User | address_id=1 }</msg>
-<var>&amp;{payload}</var>
-<arg>name=Test</arg>
-<arg>last_name=User</arg>
-<arg>address_id=${1}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.343637" elapsed="0.000000"/>
-</kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.349269" level="INFO">POST Request : url=http://127.0.0.1:8000/persons 
- path_url=/persons 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ', 'Content-Length': '54', 'Content-Type': 'application/json'} 
- body=b'{"name": "Test", "last_name": "User", "address_id": 1}' 
- </msg>
-<msg time="2026-09-22T18:08:50.349269" level="INFO">POST Response : url=http://127.0.0.1:8000/persons 
- status=201, reason=Created 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '56', 'content-type': 'application/json'} 
- body={"name":"Test","last_name":"User","address_id":1,"id":4} 
- </msg>
-<msg time="2026-09-22T18:08:50.349269" level="INFO">${resp} = &lt;Response [201]&gt;</msg>
-<var>${resp}</var>
-<arg>${SESSION}</arg>
-<arg>${PERSONS_ENDPOINT}</arg>
-<arg>json=&amp;{payload}</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=201</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.343637" elapsed="0.005632"/>
-</kw>
-<kw name="Set Variable" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.349269" level="INFO">${created} = {'name': 'Test', 'last_name': 'User', 'address_id': 1, 'id': 4}</msg>
-<var>${created}</var>
-<arg>${resp.json()}</arg>
-<doc>Returns the given values which can then be assigned to a variable.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.349269" elapsed="0.000000"/>
-</kw>
-<kw name="Should Be Equal As Strings" owner="BuiltIn">
-<arg>${created}[name]</arg>
-<arg>Test</arg>
-<doc>Fails if objects are unequal after converting them to strings.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.349269" elapsed="0.000000"/>
-</kw>
-<kw name="Should Be Equal As Strings" owner="BuiltIn">
-<arg>${created}[last_name]</arg>
-<arg>User</arg>
-<doc>Fails if objects are unequal after converting them to strings.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.349269" elapsed="0.000000"/>
-</kw>
-<kw name="Should Be Equal As Integers" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.349269" level="INFO">Argument types are:
-&lt;class 'int'&gt;
-&lt;class 'str'&gt;</msg>
-<arg>${created}[address_id]</arg>
-<arg>1</arg>
-<doc>Fails if objects are unequal after converting them to integers.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.349269" elapsed="0.000000"/>
-</kw>
-<kw name="Should Be Equal As Integers" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.349269" level="INFO">Argument types are:
-&lt;class 'int'&gt;
-&lt;class 'str'&gt;</msg>
-<arg>${created}[id]</arg>
-<arg>4</arg>
-<doc>Fails if objects are unequal after converting them to integers.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.349269" elapsed="0.000000"/>
-</kw>
-<kw name="Dictionary Should Not Contain Key" owner="Collections">
-<arg>${created}</arg>
-<arg>address</arg>
-<doc>Fails if `key` is found from `dictionary`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.349269" elapsed="0.000000"/>
-</kw>
-<kw name="GET On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.354136" level="INFO">GET Request : url=http://127.0.0.1:8000/persons/4 
- path_url=/persons/4 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ'} 
- body=None 
- </msg>
-<msg time="2026-09-22T18:08:50.354136" level="INFO">GET Response : url=http://127.0.0.1:8000/persons/4 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '136', 'content-type': 'application/json'} 
- body={"id":4,"name":"Test","last_name":"User","address":{"street":"1 Main St","city":"Warsaw","zip_code":"00-001","country":"Poland","id":1}} 
- </msg>
-<msg time="2026-09-22T18:08:50.354136" level="INFO">${get_resp} = &lt;Response [200]&gt;</msg>
-<var>${get_resp}</var>
-<arg>${SESSION}</arg>
-<arg>${PERSONS_ENDPOINT}/${created}[id]</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a GET request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.349269" elapsed="0.004867"/>
-</kw>
-<kw name="Set Variable" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.354136" level="INFO">${fetched} = {'id': 4, 'name': 'Test', 'last_name': 'User', 'address': {'street': '1 Main St', 'city': 'Warsaw', 'zip_code': '00-001', 'country': 'Poland', 'id': 1}}</msg>
-<var>${fetched}</var>
-<arg>${get_resp.json()}</arg>
-<doc>Returns the given values which can then be assigned to a variable.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.354136" elapsed="0.000000"/>
-</kw>
-<kw name="Should Be Equal As Strings" owner="BuiltIn">
-<arg>${fetched}[name]</arg>
-<arg>Test</arg>
-<doc>Fails if objects are unequal after converting them to strings.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.354136" elapsed="0.000000"/>
-</kw>
-<kw name="Dictionary Should Contain Key" owner="Collections">
-<arg>${fetched}</arg>
-<arg>address</arg>
-<doc>Fails if `key` is not found from `dictionary`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.354136" elapsed="0.000000"/>
-</kw>
-<kw name="Should Be Equal As Integers" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.354136" level="INFO">Argument types are:
-&lt;class 'int'&gt;
-&lt;class 'str'&gt;</msg>
-<arg>${fetched}[address][id]</arg>
-<arg>1</arg>
-<doc>Fails if objects are unequal after converting them to integers.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.354136" elapsed="0.000000"/>
-</kw>
-<kw name="Person Count Should Be">
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.357698" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.357698" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.357698" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.357698" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.357698" elapsed="0.000000"/>
-</kw>
-<kw name="GET On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.360690" level="INFO">GET Request : url=http://127.0.0.1:8000/persons 
- path_url=/persons 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ'} 
- body=None 
- </msg>
-<msg time="2026-09-22T18:08:50.360690" level="INFO">GET Response : url=http://127.0.0.1:8000/persons 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '571', 'content-type': 'application/json'} 
- body=[{"id":1,"name":"John","last_name":"Smith","address":{"street":"1 Main St","city":"Warsaw","zip_code":"00-001","country":"Poland","id":1}},{"id":2,"name":"Anna","last_name":"Kowalska","address":{"street":"22 Oak Ave","city":"Krakow","zip_code":"30-002","country":"Poland","id":2}},{"id":3,"name":"Sherlock","last_name":"Holmes","address":{"street":"5 Baker St","city":"London","zip_code":"NW1 6XE","country":"United Kingdom","id":3}},{"id":4,"name":"Test","last_name":"User","address":{"street":"1 Main St","city":"Warsaw","zip_code":"00-001","country":"Poland","id":1}}] 
- </msg>
-<msg time="2026-09-22T18:08:50.360690" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
-<var>${resp}</var>
-<arg>${SESSION}</arg>
-<arg>${PERSONS_ENDPOINT}</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a GET request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.357698" elapsed="0.002992"/>
-</kw>
-<kw name="Length Should Be" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.362243" level="INFO">Length is 4.</msg>
-<arg>${resp.json()}</arg>
-<arg>${expected_count}</arg>
-<doc>Verifies that the length of the given item is correct.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.360690" elapsed="0.001553"/>
-</kw>
-<arg>4</arg>
-<status status="PASS" start="2026-09-22T18:08:50.354136" elapsed="0.008107"/>
-</kw>
-<doc>The create response is the flat Person schema (no nested address),
-unlike GET /persons/{id}. This checks the flat response, then
-re-fetches via GET to confirm it round-trips with the right address.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.335927" elapsed="0.026316"/>
+<test id="s1-t3" name="GET Persons As Admin Should Succeed" line="23">
+<doc>The admin account can GET too, not just write.</doc>
+<status status="FAIL" start="2026-09-23T06:26:49.258094" elapsed="0.000000">Parent suite setup failed:
+ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
 </test>
-<test id="s1-t4" name="POST Person As Admin Missing Required Field Should Be Rejected" line="50">
-<kw name="Reset Database" owner="api" type="SETUP">
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.362243" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.362243" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.362243" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.362243" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${admin_token}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.362243" elapsed="0.000000"/>
-</kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.367507" level="INFO">POST Request : url=http://127.0.0.1:8000/reset 
- path_url=/reset 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ', 'Content-Length': '0'} 
- body=None 
- </msg>
-<msg time="2026-09-22T18:08:50.367507" level="INFO">POST Response : url=http://127.0.0.1:8000/reset 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '18', 'content-type': 'application/json'} 
- body={"status":"reset"} 
- </msg>
-<arg>${SESSION}</arg>
-<arg>/reset</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.362243" elapsed="0.005264"/>
-</kw>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Wipes and re-seeds the AUT's in-memory database (admin only).</doc>
-<status status="PASS" start="2026-09-22T18:08:50.362243" elapsed="0.005264"/>
-</kw>
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.368727" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.367507" elapsed="0.001220"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.368727" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.368727" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.367507" elapsed="0.001220"/>
-</kw>
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.368727" level="INFO">&amp;{payload} = { name=Test | address_id=1 }</msg>
-<var>&amp;{payload}</var>
-<arg>name=Test</arg>
-<arg>address_id=${1}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.368727" elapsed="0.000000"/>
-</kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.368727" level="INFO">POST Request : url=http://127.0.0.1:8000/persons 
- path_url=/persons 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ', 'Content-Length': '33', 'Content-Type': 'application/json'} 
- body=b'{"name": "Test", "address_id": 1}' 
- </msg>
-<msg time="2026-09-22T18:08:50.368727" level="INFO">POST Response : url=http://127.0.0.1:8000/persons 
- status=422, reason=Unprocessable Content 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '120', 'content-type': 'application/json'} 
- body={"detail":[{"type":"missing","loc":["body","last_name"],"msg":"Field required","input":{"name":"Test","address_id":1}}]} 
- </msg>
-<arg>${SESSION}</arg>
-<arg>${PERSONS_ENDPOINT}</arg>
-<arg>json=&amp;{payload}</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=422</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.368727" elapsed="0.000000"/>
-</kw>
-<kw name="Person Count Should Be">
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.368727" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.368727" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.368727" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.368727" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.368727" elapsed="0.000000"/>
-</kw>
-<kw name="GET On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.373392" level="INFO">GET Request : url=http://127.0.0.1:8000/persons 
- path_url=/persons 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ'} 
- body=None 
- </msg>
-<msg time="2026-09-22T18:08:50.373392" level="INFO">GET Response : url=http://127.0.0.1:8000/persons 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '434', 'content-type': 'application/json'} 
- body=[{"id":1,"name":"John","last_name":"Smith","address":{"street":"1 Main St","city":"Warsaw","zip_code":"00-001","country":"Poland","id":1}},{"id":2,"name":"Anna","last_name":"Kowalska","address":{"street":"22 Oak Ave","city":"Krakow","zip_code":"30-002","country":"Poland","id":2}},{"id":3,"name":"Sherlock","last_name":"Holmes","address":{"street":"5 Baker St","city":"London","zip_code":"NW1 6XE","country":"United Kingdom","id":3}}] 
- </msg>
-<msg time="2026-09-22T18:08:50.373392" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
-<var>${resp}</var>
-<arg>${SESSION}</arg>
-<arg>${PERSONS_ENDPOINT}</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a GET request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.368727" elapsed="0.004665"/>
-</kw>
-<kw name="Length Should Be" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.373392" level="INFO">Length is 3.</msg>
-<arg>${resp.json()}</arg>
-<arg>${expected_count}</arg>
-<doc>Verifies that the length of the given item is correct.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.373392" elapsed="0.000000"/>
-</kw>
-<arg>3</arg>
-<status status="PASS" start="2026-09-22T18:08:50.368727" elapsed="0.004665"/>
-</kw>
-<doc>Omitting "last_name" should fail schema validation (422),
-and must not create a partial record.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.362243" elapsed="0.011149"/>
-</test>
-<test id="s1-t5" name="POST Person As Admin With Nonexistent Address Should Be Rejected" line="59">
-<kw name="Reset Database" owner="api" type="SETUP">
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.373392" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.373392" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.373392" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.373392" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${admin_token}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.373392" elapsed="0.000000"/>
-</kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.377913" level="INFO">POST Request : url=http://127.0.0.1:8000/reset 
- path_url=/reset 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ', 'Content-Length': '0'} 
- body=None 
- </msg>
-<msg time="2026-09-22T18:08:50.377913" level="INFO">POST Response : url=http://127.0.0.1:8000/reset 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '18', 'content-type': 'application/json'} 
- body={"status":"reset"} 
- </msg>
-<arg>${SESSION}</arg>
-<arg>/reset</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.373392" elapsed="0.004521"/>
-</kw>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Wipes and re-seeds the AUT's in-memory database (admin only).</doc>
-<status status="PASS" start="2026-09-22T18:08:50.373392" elapsed="0.004521"/>
-</kw>
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.377913" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.377913" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.377913" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.377913" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.377913" elapsed="0.000000"/>
-</kw>
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.377913" level="INFO">&amp;{payload} = { name=Test | last_name=User | address_id=999 }</msg>
-<var>&amp;{payload}</var>
-<arg>name=Test</arg>
-<arg>last_name=User</arg>
-<arg>address_id=${999}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.377913" elapsed="0.000000"/>
-</kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.377913" level="INFO">POST Request : url=http://127.0.0.1:8000/persons 
- path_url=/persons 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ', 'Content-Length': '56', 'Content-Type': 'application/json'} 
- body=b'{"name": "Test", "last_name": "User", "address_id": 999}' 
- </msg>
-<msg time="2026-09-22T18:08:50.377913" level="INFO">POST Response : url=http://127.0.0.1:8000/persons 
- status=400, reason=Bad Request 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '62', 'content-type': 'application/json'} 
- body={"detail":"address_id does not reference an existing address"} 
- </msg>
-<msg time="2026-09-22T18:08:50.377913" level="INFO">${resp} = &lt;Response [400]&gt;</msg>
-<var>${resp}</var>
-<arg>${SESSION}</arg>
-<arg>${PERSONS_ENDPOINT}</arg>
-<arg>json=&amp;{payload}</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=400</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.377913" elapsed="0.000000"/>
-</kw>
-<kw name="Should Contain" owner="BuiltIn">
-<arg>${resp.json()}[detail]</arg>
-<arg>does not reference an existing address</arg>
-<doc>Fails if the `container` does not contain the `item` one or more times.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.377913" elapsed="0.000000"/>
-</kw>
-<kw name="Person Count Should Be">
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.377913" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.377913" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.377913" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.377913" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.377913" elapsed="0.000000"/>
-</kw>
-<kw name="GET On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.388208" level="INFO">GET Request : url=http://127.0.0.1:8000/persons 
- path_url=/persons 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ'} 
- body=None 
- </msg>
-<msg time="2026-09-22T18:08:50.388208" level="INFO">GET Response : url=http://127.0.0.1:8000/persons 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '434', 'content-type': 'application/json'} 
- body=[{"id":1,"name":"John","last_name":"Smith","address":{"street":"1 Main St","city":"Warsaw","zip_code":"00-001","country":"Poland","id":1}},{"id":2,"name":"Anna","last_name":"Kowalska","address":{"street":"22 Oak Ave","city":"Krakow","zip_code":"30-002","country":"Poland","id":2}},{"id":3,"name":"Sherlock","last_name":"Holmes","address":{"street":"5 Baker St","city":"London","zip_code":"NW1 6XE","country":"United Kingdom","id":3}}] 
- </msg>
-<msg time="2026-09-22T18:08:50.390965" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
-<var>${resp}</var>
-<arg>${SESSION}</arg>
-<arg>${PERSONS_ENDPOINT}</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a GET request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.377913" elapsed="0.013052"/>
-</kw>
-<kw name="Length Should Be" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.390965" level="INFO">Length is 3.</msg>
-<arg>${resp.json()}</arg>
-<arg>${expected_count}</arg>
-<doc>Verifies that the length of the given item is correct.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.390965" elapsed="0.000000"/>
-</kw>
-<arg>3</arg>
-<status status="PASS" start="2026-09-22T18:08:50.377913" elapsed="0.013052"/>
-</kw>
-<doc>address_id is checked against real data at request time, not just
-schema validation, so a nonexistent id should be a 400, not 201.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.373392" elapsed="0.017573"/>
-</test>
-<test id="s1-t6" name="POST Person As Admin With Empty Name Is Currently Accepted" line="69">
-<kw name="Reset Database" owner="api" type="SETUP">
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.390965" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.390965" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.390965" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.390965" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${admin_token}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.390965" elapsed="0.000000"/>
-</kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.395748" level="INFO">POST Request : url=http://127.0.0.1:8000/reset 
- path_url=/reset 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ', 'Content-Length': '0'} 
- body=None 
- </msg>
-<msg time="2026-09-22T18:08:50.395748" level="INFO">POST Response : url=http://127.0.0.1:8000/reset 
- status=200, reason=OK 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '18', 'content-type': 'application/json'} 
- body={"status":"reset"} 
- </msg>
-<arg>${SESSION}</arg>
-<arg>/reset</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=200</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.390965" elapsed="0.004783"/>
-</kw>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Wipes and re-seeds the AUT's in-memory database (admin only).</doc>
-<status status="PASS" start="2026-09-22T18:08:50.390965" elapsed="0.004783"/>
-</kw>
-<kw name="Auth Headers" owner="api">
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.395748" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>Authorization=Bearer ${token}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.395748" elapsed="0.000000"/>
-</kw>
-<return>
-<value>&amp;{headers}</value>
-<status status="PASS" start="2026-09-22T18:08:50.395748" elapsed="0.000000"/>
-</return>
-<msg time="2026-09-22T18:08:50.395748" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ }</msg>
-<var>&amp;{headers}</var>
-<arg>${ADMIN_TOKEN}</arg>
-<doc>Builds an Authorization header dictionary for the given token.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.395748" elapsed="0.000000"/>
-</kw>
-<kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-22T18:08:50.395748" level="INFO">&amp;{payload} = { name= | last_name=User | address_id=1 }</msg>
-<var>&amp;{payload}</var>
-<arg>name=${EMPTY}</arg>
-<arg>last_name=User</arg>
-<arg>address_id=${1}</arg>
-<doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.395748" elapsed="0.000000"/>
-</kw>
-<kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-22T18:08:50.401002" level="INFO">POST Request : url=http://127.0.0.1:8000/persons 
- path_url=/persons 
- headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDA5NTEzMH0.YP-uECNlGRZ6oUS1CHPOqhOH93u8QIWHTTmJnc30cVQ', 'Content-Length': '50', 'Content-Type': 'application/json'} 
- body=b'{"name": "", "last_name": "User", "address_id": 1}' 
- </msg>
-<msg time="2026-09-22T18:08:50.401002" level="INFO">POST Response : url=http://127.0.0.1:8000/persons 
- status=201, reason=Created 
- headers={'date': 'Tue, 22 Sep 2026 16:08:50 GMT', 'server': 'uvicorn', 'content-length': '52', 'content-type': 'application/json'} 
- body={"name":"","last_name":"User","address_id":1,"id":4} 
- </msg>
-<msg time="2026-09-22T18:08:50.401002" level="INFO">${resp} = &lt;Response [201]&gt;</msg>
-<var>${resp}</var>
-<arg>${SESSION}</arg>
-<arg>${PERSONS_ENDPOINT}</arg>
-<arg>json=&amp;{payload}</arg>
-<arg>headers=&amp;{headers}</arg>
-<arg>expected_status=201</arg>
-<doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.395748" elapsed="0.005254"/>
-</kw>
-<kw name="Should Be Equal As Strings" owner="BuiltIn">
-<arg>${resp.json()}[name]</arg>
-<arg>${EMPTY}</arg>
-<doc>Fails if objects are unequal after converting them to strings.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.401002" elapsed="0.000000"/>
-</kw>
-<doc>Documents present behavior: the AUT does not yet reject empty
-field values. If validation is added later, update this test
-to expect 422 instead of 201.</doc>
-<status status="PASS" start="2026-09-22T18:08:50.390965" elapsed="0.010037"/>
+<test id="s1-t4" name="GET Persons Should Return Seeded Persons With Nested Address" line="28">
+<doc>Response shape: each person embeds its full address, not just an id,
+and the seeded dataset (from POST /reset) is present.</doc>
+<status status="FAIL" start="2026-09-23T06:26:49.258094" elapsed="0.000000">Parent suite setup failed:
+ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
 </test>
 <kw name="Delete All Sessions" owner="RequestsLibrary" type="TEARDOWN">
-<msg time="2026-09-22T18:08:50.403512" level="INFO">Deleting All Sessions</msg>
+<msg time="2026-09-23T06:26:49.258094" level="INFO">Deleting All Sessions</msg>
 <doc>Removes all the session objects </doc>
-<status status="PASS" start="2026-09-22T18:08:50.403512" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T06:26:49.258094" elapsed="0.000000"/>
 </kw>
-<doc>Tests for POST /persons on the Customer DB AUT.
+<doc>Tests for GET /persons on the Customer DB AUT.
 Requires the AUT to be running at http://127.0.0.1:8000 (see AUT/README.md).</doc>
-<status status="PASS" start="2026-09-22T18:08:49.920041" elapsed="0.483471"/>
+<status status="FAIL" start="2026-09-23T06:26:40.177245" elapsed="9.080849">Suite setup failed:
+ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
 </suite>
 <statistics>
 <total>
-<stat pass="6" fail="0" skip="0">All Tests</stat>
+<stat pass="0" fail="4" skip="0">All Tests</stat>
 </total>
 <tag>
 </tag>
 <suite>
-<stat name="Post Persons" id="s1" pass="6" fail="0" skip="0">Post Persons</stat>
+<stat name="Get Persons" id="s1" pass="0" fail="4" skip="0">Get Persons</stat>
 </suite>
 </statistics>
 <errors>
+<msg time="2026-09-23T06:26:42.425517" level="WARN">Retrying (RetryAdapter(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFD3D6ED0&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /token</msg>
+<msg time="2026-09-23T06:26:44.664885" level="WARN">Retrying (RetryAdapter(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFA431090&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /token</msg>
+<msg time="2026-09-23T06:26:47.116019" level="WARN">Retrying (RetryAdapter(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFA431E10&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /token</msg>
 </errors>
 </robot>

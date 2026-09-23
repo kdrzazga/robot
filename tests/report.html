@@ -1918,22 +1918,22 @@ storage = function () {
 window.output = {};
 </script>
 <script type="text/javascript">
-window.output["suite"] = [1,2,3,4,[],[1,0,483],[],[[5,0,6,[],[],[1,383,20],[]],[7,0,8,[],[],[1,403,13],[]],[9,0,10,[],[],[1,416,26],[]],[11,0,12,[],[],[1,442,11],[]],[13,0,14,[],[],[1,453,18],[]],[15,0,16,[],[],[1,471,10],[]]],[],[6,6,0,0]];
+window.output["suite"] = [1,2,3,4,[],[0,0,9081,5],[],[[6,0,7,[],[],[0,9081,0,8],[]],[9,0,10,[],[],[0,9081,0,8],[]],[11,0,12,[],[],[0,9081,0,8],[]],[13,0,14,[],[],[0,9081,0,8],[]]],[],[4,0,4,0]];
 </script>
 <script type="text/javascript">
 window.output["strings"] = [];
 </script>
 <script type="text/javascript">
-window.output["strings"] = window.output["strings"].concat(["*","*Post Persons","*D:\\code\\robot\\tests\\post_persons.robot","*post_persons.robot","*<p>Tests for POST /persons on the Customer DB AUT. Requires the AUT to be running at <a href=\"http://127.0.0.1:8000\">http://127.0.0.1:8000\x3c/a> (see AUT/README.md).\x3c/p>","*POST Person Without Token Should Be Unauthorized","*<p>Creating a person requires authentication.\x3c/p>","*POST Person As Read Only User Should Be Forbidden","*<p>The read-only \"user\" account cannot write, per the role rules.\x3c/p>","*POST Person As Admin Should Create And Persist It","*<p>The create response is the flat Person schema (no nested address), unlike GET /persons/{id}. This checks the flat response, then re-fetches via GET to confirm it round-trips with the right address.\x3c/p>","*POST Person As Admin Missing Required Field Should Be Rejected","*<p>Omitting \"last_name\" should fail schema validation (422), and must not create a partial record.\x3c/p>","*POST Person As Admin With Nonexistent Address Should Be Rejected","*<p>address_id is checked against real data at request time, not just schema validation, so a nonexistent id should be a 400, not 201.\x3c/p>","*POST Person As Admin With Empty Name Is Currently Accepted","*<p>Documents present behavior: the AUT does not yet reject empty field values. If validation is added later, update this test to expect 422 instead of 201.\x3c/p>"]);
+window.output["strings"] = window.output["strings"].concat(["*","*Get Persons","*D:\\code\\robot\\tests\\get_persons.robot","*get_persons.robot","*<p>Tests for GET /persons on the Customer DB AUT. Requires the AUT to be running at <a href=\"http://127.0.0.1:8000\">http://127.0.0.1:8000\x3c/a> (see AUT/README.md).\x3c/p>","*Suite setup failed:\nConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))","*GET Persons Without Token Should Be Unauthorized","*<p>/persons requires authentication.\x3c/p>","*Parent suite setup failed:\nConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))","*GET Persons As Read Only User Should Succeed","*<p>The read-only \"user\" account can GET, per the role rules.\x3c/p>","*GET Persons As Admin Should Succeed","*<p>The admin account can GET too, not just write.\x3c/p>","*GET Persons Should Return Seeded Persons With Nested Address","*<p>Response shape: each person embeds its full address, not just an id, and the seeded dataset (from POST /reset) is present.\x3c/p>"]);
 </script>
 <script type="text/javascript">
-window.output["stats"] = [[{"elapsed":"00:00:00","fail":0,"label":"All Tests","pass":6,"skip":0}],[],[{"elapsed":"00:00:00","fail":0,"id":"s1","label":"Post Persons","name":"Post Persons","pass":6,"skip":0}]];
+window.output["stats"] = [[{"elapsed":"00:00:00","fail":4,"label":"All Tests","pass":0,"skip":0}],[],[{"elapsed":"00:00:09","fail":4,"id":"s1","label":"Get Persons","name":"Get Persons","pass":0,"skip":0}]];
 </script>
 <script type="text/javascript">
-window.output["baseMillis"] = 1790093329920;
+window.output["baseMillis"] = 1790137600177;
 </script>
 <script type="text/javascript">
-window.output["generated"] = 503;
+window.output["generated"] = 9092;
 </script>
 <script type="text/javascript">
 window.output["expand_keywords"] = null;

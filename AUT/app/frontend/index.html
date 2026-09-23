@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AUT – People and addresses</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <h1>People and addresses</h1>
+  <div class="session" id="session" hidden>
+    <span>Signed in as <strong id="current-user"></strong></span>
+    <span class="role-badge" id="current-role" data-testid="current-role"></span>
+    <button class="btn" id="logout-btn" type="button">Log out</button>
+  </div>
+</header>
+
+<!-- Login popup -->
+<dialog id="login-dialog">
+  <form id="login-form" method="dialog" novalidate>
+    <h2>Log in</h2>
+    <label>Username
+      <input id="username" name="username" autocomplete="username" required>
+    </label>
+    <label>Password
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+    </label>
+    <p class="login-error" id="login-error" role="alert"></p>
+    <button class="btn primary" id="login-btn" type="submit">Log in</button>
+    <p class="mock-note" id="mock-note" hidden>Mock mode: admin/admin or user/user</p>
+  </form>
+</dialog>
+
+<main id="app" hidden>
+  <div role="tablist" aria-label="Data">
+    <button role="tab" id="tab-person" aria-controls="panel-person" aria-selected="true">Person</button>
+    <button role="tab" id="tab-address" aria-controls="panel-address" aria-selected="false" tabindex="-1">Address</button>
+  </div>
+
+  <section role="tabpanel" id="panel-person" aria-labelledby="tab-person">
+    <div class="toolbar">
+      <button class="btn" type="button" id="person-reload">Reload</button>
+      <button class="btn primary admin-only" type="button" id="person-save" disabled>Save changes</button>
+      <span class="status" id="person-status" role="status"></span>
+    </div>
+    <div class="table-wrap"><table id="person-table"></table></div>
+  </section>
+
+  <section role="tabpanel" id="panel-address" aria-labelledby="tab-address" hidden>
+    <div class="toolbar">
+      <button class="btn" type="button" id="address-reload">Reload</button>
+      <button class="btn primary admin-only" type="button" id="address-save" disabled>Save changes</button>
+      <span class="status" id="address-status" role="status"></span>
+    </div>
+    <div class="table-wrap"><table id="address-table"></table></div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

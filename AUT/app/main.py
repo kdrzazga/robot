@@ -1,9 +1,13 @@
 from contextlib import asynccontextmanager
 from datetime import timedelta
+from pathlib import Path
 from typing import List
 
 from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from app import models, schemas
@@ -31,6 +35,23 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Customer DB AUT", version="1.0.0", lifespan=lifespan)
+
+# Lets the UI call the API when index.html is opened from disk or another
+# port. Wide open on purpose: this is a throwaway application-under-test.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+FRONTEND_DIR = Path(__file__).parent / "frontend"
+app.mount("/ui", StaticFiles(directory=FRONTEND_DIR, html=True), name="ui")
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse(url="/ui/")
 
 
 @app.post("/token", response_model=schemas.Token, tags=["auth"])

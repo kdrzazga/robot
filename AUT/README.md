@@ -49,6 +49,10 @@ python run.py
 Server starts at http://127.0.0.1:8000 . Interactive docs (with a built-in
 "Authorize" button for the bearer token) at http://127.0.0.1:8000/docs .
 
+Web UI (served by the same server, `/` redirects to it) at
+http://127.0.0.1:8000/ui/ . Opening `app/frontend/index.html` straight from
+disk also works while the server runs; add `?mock=1` to try it without one.
+
 ## Endpoints
 
 - `POST /token` — login, get a JWT
