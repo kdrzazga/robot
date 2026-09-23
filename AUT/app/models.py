@@ -22,6 +22,7 @@ class Person(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
+    tax_id = Column("TAX_ID", String, unique=True, nullable=False)
     address_id = Column(Integer, ForeignKey("address.id"), nullable=False)
 
     address = relationship("Address", back_populates="persons")

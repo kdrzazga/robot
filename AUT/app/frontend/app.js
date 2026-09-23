@@ -1,19 +1,30 @@
 /* ============================================================
-   CONFIG – matches the FastAPI backend (app/main.py)
-   Contract:
-     POST {apiBase}/token           form username, password
-                                    -> {access_token, token_type}; role is in the JWT
-     GET  {apiBase}/persons         -> [ {id, name, last_name, address: {...}}, ... ]
-     PUT  {apiBase}/persons/{id}    body {name, last_name, address_id}  (admin only)
-     GET  {apiBase}/addresses       -> [ {id, street, city, zip_code, country}, ... ]
-     PUT  {apiBase}/addresses/{id}  body = full row  (admin only)
+   CONFIG – matches the two FastAPI services
+   Customer DB (app/main.py, port 8000):
+     POST /token                form username, password
+                                -> {access_token, token_type}; role is in the JWT
+     GET  /persons              -> [ {id, name, last_name, tax_id, address: {...}}, ... ]
+     PUT  /persons/{id}         body {name, last_name, tax_id, address_id}  (admin only)
+     GET  /addresses            -> [ {id, street, city, zip_code, country}, ... ]
+     PUT  /addresses/{id}       body = full row  (admin only)
+   TaxInformation (tax_app/main.py, port 8001) – accepts the same token:
+     GET  /taxes                -> [ {id, name, last_name, tax_id, tax_amount}, ... ]
+     PUT  /taxes/{id}           body = full row  (admin only)
    The page may be served from anywhere (backend /ui/, disk, PyCharm's
-   built-in server); the backend allows CORS, so always use its full URL.
+   built-in server); both services allow CORS, so always use full URLs.
    Open index.html?mock=1 to run without a backend.
    ============================================================ */
 const CONFIG = {
-  apiBase: "http://127.0.0.1:8000",
-  endpoints: { login: "/token", person: "/persons", address: "/addresses" },
+  services: {
+    customers: "http://127.0.0.1:8000",
+    tax: "http://127.0.0.1:8001",
+  },
+  endpoints: {
+    login:   { service: "customers", path: "/token" },
+    person:  { service: "customers", path: "/persons" },
+    address: { service: "customers", path: "/addresses" },
+    tax:     { service: "tax",       path: "/taxes" },
+  },
   idField: "id",
   useMock: new URLSearchParams(location.search).has("mock"),
 };
@@ -22,6 +33,7 @@ const CONFIG = {
 const TO_ROW = {
   person: ({ address, ...person }) => ({ ...person, address_id: address ? address.id : person.address_id }),
   address: address => address,
+  tax: tax => tax,
 };
 
 /* Reads the claims from a JWT without verifying it (the server does that). */
@@ -34,17 +46,21 @@ function decodeJwt(token) {
 const MOCK = {
   users: { admin: { password: "admin", role: "admin" }, user: { password: "user", role: "user" } },
   person: [
-    { id: 1, name: "John", last_name: "Smith", address_id: 1 },
-    { id: 2, name: "Anna", last_name: "Kowalska", address_id: 2 },
+    { id: 1, name: "John", last_name: "Smith", tax_id: "TAX-1001", address_id: 1 },
+    { id: 2, name: "Anna", last_name: "Kowalska", tax_id: "TAX-1002", address_id: 2 },
   ],
   address: [
     { id: 1, street: "1 Main St", city: "Warsaw", zip_code: "00-001", country: "Poland" },
     { id: 2, street: "22 Oak Ave", city: "Krakow", zip_code: "30-002", country: "Poland" },
   ],
+  tax: [
+    { id: 1, name: "John", last_name: "Smith", tax_id: "TAX-1001", tax_amount: 1250 },
+    { id: 2, name: "Anna", last_name: "Kowalska", tax_id: "TAX-1002", tax_amount: 980.5 },
+  ],
 };
 async function mockRequest(path, { method = "GET", body } = {}) {
   await new Promise(r => setTimeout(r, 150));
-  if (path === CONFIG.endpoints.login) {
+  if (path === CONFIG.endpoints.login.path) {
     const form = new URLSearchParams(body);
     const u = MOCK.users[form.get("username")];
     if (!u || u.password !== form.get("password")) throw new ApiError(401, "Wrong username or password.");
@@ -52,8 +68,8 @@ async function mockRequest(path, { method = "GET", body } = {}) {
     return { access_token: "mock." + claims + ".mock", token_type: "bearer" };
   }
   const data = body ? JSON.parse(body) : null;
-  for (const key of ["person", "address"]) {
-    const base = CONFIG.endpoints[key];
+  for (const key of ["person", "address", "tax"]) {
+    const base = CONFIG.endpoints[key].path;
     if (path === base && method === "GET") return structuredClone(MOCK[key]);
     if (path.startsWith(base + "/") && method === "PUT") {
       if (state.role !== "admin") throw new ApiError(403, "Only admins can edit.");
@@ -71,16 +87,19 @@ async function mockRequest(path, { method = "GET", body } = {}) {
 class ApiError extends Error {
   constructor(status, message) { super(message); this.status = status; }
 }
-async function api(path, options = {}) {
+/* Calls `endpoint` (an entry of CONFIG.endpoints), optionally with a sub-path like "/42". */
+async function api(endpoint, subPath = "", options = {}) {
+  const path = endpoint.path + subPath;
   if (CONFIG.useMock) return mockRequest(path, options);
+  const serviceUrl = CONFIG.services[endpoint.service];
   // URLSearchParams bodies get their form content type from fetch itself.
   const headers = typeof options.body === "string" ? { "Content-Type": "application/json" } : {};
   if (state.token) headers.Authorization = "Bearer " + state.token;
   let res;
   try {
-    res = await fetch(CONFIG.apiBase + path, { ...options, headers });
+    res = await fetch(serviceUrl + path, { ...options, headers });
   } catch {
-    throw new ApiError(0, "Can't reach the server at " + CONFIG.apiBase + ".");
+    throw new ApiError(0, "Can't reach the server at " + serviceUrl + ".");
   }
   const text = await res.text();
   let payload = null;
@@ -104,6 +123,7 @@ const state = {
   tabs: {
     person:  { rows: [], dirty: new Map() },
     address: { rows: [], dirty: new Map() },
+    tax:     { rows: [], dirty: new Map() },
   },
 };
 const isAdmin = () => state.role === "admin";
@@ -134,7 +154,7 @@ $("login-form").addEventListener("submit", async e => {
   $("login-btn").disabled = true;
   $("login-error").textContent = "";
   try {
-    const res = await api(CONFIG.endpoints.login, {
+    const res = await api(CONFIG.endpoints.login, "", {
       method: "POST", body: new URLSearchParams({ username, password }),
     });
     state.token = res.access_token;
@@ -157,21 +177,22 @@ function startSession() {
   document.querySelectorAll(".admin-only").forEach(el => (el.hidden = !isAdmin()));
   $("app").hidden = false;
   selectTab("person");
-  loadTab("person");
-  loadTab("address");
+  tabs.forEach(loadTab);
 }
 
 $("logout-btn").addEventListener("click", () => logout());
 function logout(message) {
   state.token = state.role = state.username = null;
-  for (const t of Object.values(state.tabs)) { t.rows = []; t.dirty.clear(); }
-  $("person-table").innerHTML = "";
-  $("address-table").innerHTML = "";
+  for (const [name, t] of Object.entries(state.tabs)) {
+    t.rows = [];
+    t.dirty.clear();
+    $(name + "-table").innerHTML = "";
+  }
   showLogin(message);
 }
 
 /* ---------- Tabs ---------- */
-const tabs = ["person", "address"];
+const tabs = ["person", "address", "tax"];
 function selectTab(name) {
   for (const t of tabs) {
     const active = t === name;
@@ -283,14 +304,13 @@ function updateSaveButton(tab) {
 async function saveTab(tab) {
   if (!isAdmin()) return;
   const t = state.tabs[tab];
-  const base = CONFIG.endpoints[tab];
   $(tab + "-save").disabled = true;
   setStatus(tab, "Saving…");
   const failed = [];
   for (const [id, changes] of t.dirty) {
     const row = t.rows.find(r => r[CONFIG.idField] === id);
     try {
-      await api(base + "/" + encodeURIComponent(id), {
+      await api(CONFIG.endpoints[tab], "/" + encodeURIComponent(id), {
         method: "PUT", body: JSON.stringify({ ...row, ...changes }),
       });
     } catch (err) {

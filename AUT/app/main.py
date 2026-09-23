@@ -1,23 +1,15 @@
 from contextlib import asynccontextmanager
-from datetime import timedelta
 from pathlib import Path
 from typing import List
 
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
-from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
-from app import models, schemas
-from app.auth import (
-    ACCESS_TOKEN_EXPIRE_MINUTES,
-    authenticate_user,
-    create_access_token,
-    get_current_user,
-    require_admin,
-)
+from app import auth, models, schemas
+from app.auth import get_current_user, require_admin
 from app.database import Base, SessionLocal, engine, get_db
 from app.seed import seed_data
 
@@ -54,20 +46,7 @@ def root():
     return RedirectResponse(url="/ui/")
 
 
-@app.post("/token", response_model=schemas.Token, tags=["auth"])
-def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    access_token = create_access_token(
-        data={"sub": user["username"], "role": user["role"]},
-        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
+app.include_router(auth.router)
 
 
 @app.post("/reset", tags=["admin"])
@@ -139,6 +118,17 @@ def delete_address(
 
 # --- Person endpoints ---
 
+def _check_person_references(db: Session, person: schemas.PersonCreate, person_id: int | None = None):
+    address = db.query(models.Address).filter(models.Address.id == person.address_id).first()
+    if not address:
+        raise HTTPException(status_code=400, detail="address_id does not reference an existing address")
+    same_tax_id = db.query(models.Person).filter(
+        models.Person.tax_id == person.tax_id, models.Person.id != person_id
+    ).first()
+    if same_tax_id:
+        raise HTTPException(status_code=400, detail="tax_id is already used by another person")
+
+
 @app.get("/persons", response_model=List[schemas.PersonWithAddress], tags=["persons"])
 def list_persons(db: Session = Depends(get_db), _user=Depends(get_current_user)):
     return db.query(models.Person).all()
@@ -158,9 +148,7 @@ def create_person(
     db: Session = Depends(get_db),
     _admin=Depends(require_admin),
 ):
-    address = db.query(models.Address).filter(models.Address.id == person.address_id).first()
-    if not address:
-        raise HTTPException(status_code=400, detail="address_id does not reference an existing address")
+    _check_person_references(db, person)
     db_person = models.Person(**person.model_dump())
     db.add(db_person)
     db.commit()
@@ -178,9 +166,7 @@ def update_person(
     db_person = db.query(models.Person).filter(models.Person.id == person_id).first()
     if not db_person:
         raise HTTPException(status_code=404, detail="Person not found")
-    address = db.query(models.Address).filter(models.Address.id == person.address_id).first()
-    if not address:
-        raise HTTPException(status_code=400, detail="address_id does not reference an existing address")
+    _check_person_references(db, person, person_id)
     for key, value in person.model_dump().items():
         setattr(db_person, key, value)
     db.commit()

@@ -20,6 +20,7 @@ class Address(AddressBase):
 class PersonBase(BaseModel):
     name: str
     last_name: str
+    tax_id: str
     address_id: int
 
 
@@ -37,6 +38,7 @@ class PersonWithAddress(BaseModel):
     id: int
     name: str
     last_name: str
+    tax_id: str
     address: Address
 
 

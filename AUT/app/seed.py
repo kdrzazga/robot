@@ -20,9 +20,9 @@ def seed_data(db: Session) -> None:
         db.refresh(a)
 
     persons = [
-        models.Person(name="John", last_name="Smith", address_id=addresses[0].id),
-        models.Person(name="Anna", last_name="Kowalska", address_id=addresses[1].id),
-        models.Person(name="Sherlock", last_name="Holmes", address_id=addresses[2].id),
+        models.Person(name="John", last_name="Smith", tax_id="TAX-1001", address_id=addresses[0].id),
+        models.Person(name="Anna", last_name="Kowalska", tax_id="TAX-1002", address_id=addresses[1].id),
+        models.Person(name="Sherlock", last_name="Holmes", tax_id="TAX-1003", address_id=addresses[2].id),
     ]
     db.add_all(persons)
     db.commit()
