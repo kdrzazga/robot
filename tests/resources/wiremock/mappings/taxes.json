@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/taxes"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": [
+      {
+        "id": 1,
+        "name": "Stub",
+        "last_name": "Taxpayer",
+        "tax_id": "mock_tax_number",
+        "tax_amount": 0.0
+      }
+    ]
+  }
+}
