@@ -14,7 +14,7 @@ Library           Process
 Library           WireMockLibrary
 Suite Setup       Setup Stubbed Environment
 Suite Teardown    Teardown Stubbed Environment
-Test Setup        Reset Request Log
+Test Setup        Clear WireMock Request Log
 
 *** Variables ***
 ${WIREMOCK_JAR}       ${CURDIR}/resources/wiremock-standalone-3.13.2.jar
@@ -69,6 +69,12 @@ Connect To WireMock
 
 WireMock Admin API Should Answer
     GET    ${WIREMOCK_URL}/__admin/mappings    expected_status=200
+
+Clear WireMock Request Log
+    [Documentation]    WireMockLibrary's own "Reset Request Log" calls
+    ...                POST /__admin/requests/reset, which WireMock 3.x no longer has (404).
+    ...                DELETE /__admin/requests is the current equivalent.
+    DELETE    ${WIREMOCK_URL}/__admin/requests    expected_status=200
 
 Stub Tax Service To Always Return Mock Tax Number
     [Documentation]    Registers the mapping from ${TAX_STUB_FILE} (the same file a standalone
