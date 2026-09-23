@@ -77,4 +77,3 @@ input {
   font: inherit; padding: 0.5rem 0.6rem; border: 1px solid var(--line); border-radius: 4px;
 }
 .login-error { color: var(--danger); font-size: 0.9rem; min-height: 1.2em; margin: 0; }
-.mock-note { font-size: 0.8rem; color: var(--muted); margin: 0; }

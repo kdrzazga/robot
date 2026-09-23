@@ -69,9 +69,10 @@ for the bearer token) at http://127.0.0.1:8000/docs and
 http://127.0.0.1:8001/docs .
 
 Web UI (served by the Customer DB service, `/` redirects to it) at
-http://127.0.0.1:8000/ui/ . It talks to both services; the Taxes tab needs
-`run_tax.py` running. Opening `app/frontend/index.html` straight from disk
-also works while the servers run; add `?mock=1` to try it without them.
+http://127.0.0.1:8000/ui/ . The browser only talks to the Customer DB service;
+the Taxes tab goes through its `/taxes` endpoints, which forward to
+TaxInformation, so that tab needs `run_tax.py` (or a stub on port 8001). Opening `app/frontend/index.html` straight from disk
+also works while the servers run.
 
 ## Endpoints
 
@@ -86,6 +87,9 @@ also works while the servers run; add `?mock=1` to try it without them.
   service URL comes from the `TAX_SERVICE_URL` environment variable (default
   http://127.0.0.1:8001), so tests can point it at a stub. Returns 502 if the
   tax service can't be reached.
+- `GET /taxes`, `PUT /taxes/{id}` (admin) — pass-through to TaxInformation's
+  endpoints of the same name, forwarding the caller's token. Its 4xx errors
+  (e.g. duplicate tax_id, 422 validation) are returned unchanged.
 
 TaxInformation (port 8001):
 

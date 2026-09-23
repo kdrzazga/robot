@@ -1,32 +1,22 @@
 /* ============================================================
-   CONFIG – matches the two FastAPI services
-   Customer DB (app/main.py, port 8000):
+   CONFIG – the UI talks ONLY to the customer DB service (app/main.py, port 8000).
+   It never calls the TaxInformation service; the customer DB forwards tax
+   requests to it (app/tax_client.py).
      POST /token                form username, password
                                 -> {access_token, token_type}; role is in the JWT
      GET  /persons              -> [ {id, name, last_name, tax_id, address: {...}}, ... ]
      PUT  /persons/{id}         body {name, last_name, tax_id, address_id}  (admin only)
      GET  /addresses            -> [ {id, street, city, zip_code, country}, ... ]
      PUT  /addresses/{id}       body = full row  (admin only)
-   TaxInformation (tax_app/main.py, port 8001) – accepts the same token:
      GET  /taxes                -> [ {id, name, last_name, tax_id, tax_amount}, ... ]
      PUT  /taxes/{id}           body = full row  (admin only)
    The page may be served from anywhere (backend /ui/, disk, PyCharm's
-   built-in server); both services allow CORS, so always use full URLs.
-   Open index.html?mock=1 to run without a backend.
+   built-in server); the service allows CORS, so always use its full URL.
    ============================================================ */
 const CONFIG = {
-  services: {
-    customers: "http://127.0.0.1:8000",
-    tax: "http://127.0.0.1:8001",
-  },
-  endpoints: {
-    login:   { service: "customers", path: "/token" },
-    person:  { service: "customers", path: "/persons" },
-    address: { service: "customers", path: "/addresses" },
-    tax:     { service: "tax",       path: "/taxes" },
-  },
+  apiBase: "http://127.0.0.1:8000",
+  endpoints: { login: "/token", person: "/persons", address: "/addresses", tax: "/taxes" },
   idField: "id",
-  useMock: new URLSearchParams(location.search).has("mock"),
 };
 
 /* Turns an API record into a flat, editable table row. */
@@ -42,64 +32,19 @@ function decodeJwt(token) {
   return JSON.parse(atob(payload));
 }
 
-/* ---------- Mock backend (only used with ?mock=1) ---------- */
-const MOCK = {
-  users: { admin: { password: "admin", role: "admin" }, user: { password: "user", role: "user" } },
-  person: [
-    { id: 1, name: "John", last_name: "Smith", tax_id: "TAX-1001", address_id: 1 },
-    { id: 2, name: "Anna", last_name: "Kowalska", tax_id: "TAX-1002", address_id: 2 },
-  ],
-  address: [
-    { id: 1, street: "1 Main St", city: "Warsaw", zip_code: "00-001", country: "Poland" },
-    { id: 2, street: "22 Oak Ave", city: "Krakow", zip_code: "30-002", country: "Poland" },
-  ],
-  tax: [
-    { id: 1, name: "John", last_name: "Smith", tax_id: "TAX-1001", tax_amount: 1250 },
-    { id: 2, name: "Anna", last_name: "Kowalska", tax_id: "TAX-1002", tax_amount: 980.5 },
-  ],
-};
-async function mockRequest(path, { method = "GET", body } = {}) {
-  await new Promise(r => setTimeout(r, 150));
-  if (path === CONFIG.endpoints.login.path) {
-    const form = new URLSearchParams(body);
-    const u = MOCK.users[form.get("username")];
-    if (!u || u.password !== form.get("password")) throw new ApiError(401, "Wrong username or password.");
-    const claims = btoa(JSON.stringify({ sub: form.get("username"), role: u.role }));
-    return { access_token: "mock." + claims + ".mock", token_type: "bearer" };
-  }
-  const data = body ? JSON.parse(body) : null;
-  for (const key of ["person", "address", "tax"]) {
-    const base = CONFIG.endpoints[key].path;
-    if (path === base && method === "GET") return structuredClone(MOCK[key]);
-    if (path.startsWith(base + "/") && method === "PUT") {
-      if (state.role !== "admin") throw new ApiError(403, "Only admins can edit.");
-      const id = path.slice(base.length + 1);
-      const i = MOCK[key].findIndex(r => String(r[CONFIG.idField]) === id);
-      if (i < 0) throw new ApiError(404, "Row not found.");
-      MOCK[key][i] = data;
-      return data;
-    }
-  }
-  throw new ApiError(404, "Unknown endpoint " + path);
-}
-
 /* ---------- API layer ---------- */
 class ApiError extends Error {
   constructor(status, message) { super(message); this.status = status; }
 }
-/* Calls `endpoint` (an entry of CONFIG.endpoints), optionally with a sub-path like "/42". */
-async function api(endpoint, subPath = "", options = {}) {
-  const path = endpoint.path + subPath;
-  if (CONFIG.useMock) return mockRequest(path, options);
-  const serviceUrl = CONFIG.services[endpoint.service];
+async function api(path, options = {}) {
   // URLSearchParams bodies get their form content type from fetch itself.
   const headers = typeof options.body === "string" ? { "Content-Type": "application/json" } : {};
   if (state.token) headers.Authorization = "Bearer " + state.token;
   let res;
   try {
-    res = await fetch(serviceUrl + path, { ...options, headers });
+    res = await fetch(CONFIG.apiBase + path, { ...options, headers });
   } catch {
-    throw new ApiError(0, "Can't reach the server at " + serviceUrl + ".");
+    throw new ApiError(0, "Can't reach the server at " + CONFIG.apiBase + ".");
   }
   const text = await res.text();
   let payload = null;
@@ -136,7 +81,6 @@ dialog.addEventListener("cancel", e => e.preventDefault()); // can't close with 
 function showLogin(message = "") {
   $("login-form").reset();
   $("login-error").textContent = message;
-  $("mock-note").hidden = !CONFIG.useMock;
   $("app").hidden = true;
   $("session").hidden = true;
   if (!dialog.open) dialog.showModal();
@@ -154,7 +98,7 @@ $("login-form").addEventListener("submit", async e => {
   $("login-btn").disabled = true;
   $("login-error").textContent = "";
   try {
-    const res = await api(CONFIG.endpoints.login, "", {
+    const res = await api(CONFIG.endpoints.login, {
       method: "POST", body: new URLSearchParams({ username, password }),
     });
     state.token = res.access_token;
@@ -310,7 +254,7 @@ async function saveTab(tab) {
   for (const [id, changes] of t.dirty) {
     const row = t.rows.find(r => r[CONFIG.idField] === id);
     try {
-      await api(CONFIG.endpoints[tab], "/" + encodeURIComponent(id), {
+      await api(CONFIG.endpoints[tab] + "/" + encodeURIComponent(id), {
         method: "PUT", body: JSON.stringify({ ...row, ...changes }),
       });
     } catch (err) {

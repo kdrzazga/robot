@@ -1,125 +1,320 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 7.5 (Python 3.11.4 on win32)" generated="2026-09-23T06:26:40.161025" rpa="false" schemaversion="5">
-<suite id="s1" name="Get Persons" source="D:\code\robot\tests\get_persons.robot">
-<kw name="Setup Test Environment" type="SETUP">
+<robot generator="Robot 7.5 (Python 3.14.0 on win32)" generated="2026-09-23T11:01:44.407023" rpa="false" schemaversion="5">
+<suite id="s1" name="Test With Stub" source="D:\code\robot\tests\test_with_stub.robot">
+<kw name="Setup Stubbed Environment" type="SETUP">
+<kw name="Start WireMock">
+<kw name="Start Process" owner="Process">
+<msg time="2026-09-23T11:01:44.561194" level="INFO">Starting process:
+java -jar D:\code\robot\tests/resources/wiremock-standalone-3.13.2.jar --port 8001 --disable-banner</msg>
+<arg>java</arg>
+<arg>-jar</arg>
+<arg>${WIREMOCK_JAR}</arg>
+<arg>--port</arg>
+<arg>${WIREMOCK_PORT}</arg>
+<arg>--disable-banner</arg>
+<arg>alias=wiremock</arg>
+<arg>cwd=${OUTPUT DIR}</arg>
+<arg>stdout=${OUTPUT DIR}/wiremock.log</arg>
+<arg>stderr=STDOUT</arg>
+<doc>Starts a new process on background.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.560638" elapsed="0.014345"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="WireMock Should Be Up">
+<kw name="Process Should Be Running" owner="Process">
+<arg>wiremock</arg>
+<arg>error_message=WireMock exited. Is port ${WIREMOCK_PORT} taken (e.g. by run_tax.py)? See wiremock.log.</arg>
+<doc>Verifies that the process is running.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.575860" elapsed="0.000264"/>
+</kw>
+<kw name="GET" owner="RequestsLibrary">
+<msg time="2026-09-23T11:01:44.583512" level="INFO">GET Request : url=http://127.0.0.1:8001/__admin/mappings 
+ path_url=/__admin/mappings 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive'} 
+ body=None 
+ </msg>
+<msg time="2026-09-23T11:01:44.583623" level="INFO">GET Response : url=http://127.0.0.1:8001/__admin/mappings 
+ status=200, reason=OK 
+ headers={'Vary': 'Origin', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked'} 
+ body={
+  "mappings" : [ ],
+  "meta" : {
+    "total" : 0
+  }
+} 
+ </msg>
+<arg>${WIREMOCK_URL}/__admin/mappings</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a GET request.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.576242" elapsed="0.007437"/>
+</kw>
+<status status="PASS" start="2026-09-23T11:01:44.575694" elapsed="0.008053"/>
+</kw>
+<arg>30s</arg>
+<arg>1s</arg>
+<arg>WireMock Should Be Up</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.575216" elapsed="0.008562"/>
+</kw>
+<kw name="Create Mock Session" owner="WireMockLibrary">
+<arg>${WIREMOCK_URL}</arg>
+<doc>Creates an HTTP session towards wiremock.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.583881" elapsed="0.000163"/>
+</kw>
+<doc>Runs the WireMock JAR in the background and waits until its admin
+API answers. Its log goes to wiremock.log in the output directory.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.560283" elapsed="0.023802"/>
+</kw>
+<kw name="Stub Tax Service To Always Return Mock Tax Number">
+<kw name="Create Mock Request Matcher" owner="WireMockLibrary">
+<msg time="2026-09-23T11:01:44.584521" level="INFO">${request} = {'method': 'GET', 'urlPath': '/taxes'}</msg>
+<var>${request}</var>
+<arg>GET</arg>
+<arg>/taxes</arg>
+<doc>Creates a mock request matcher to be used by wiremock.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.584400" elapsed="0.000144"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-09-23T11:01:44.585141" level="INFO">&amp;{record} = { id=1 | name=Stub | last_name=Taxpayer | tax_id=mock_tax_number | tax_amount=0.0 }</msg>
+<var>&amp;{record}</var>
+<arg>id=${1}</arg>
+<arg>name=Stub</arg>
+<arg>last_name=Taxpayer</arg>
+<arg>tax_id=${MOCK_TAX_NUMBER}</arg>
+<arg>tax_amount=${0.0}</arg>
+<doc>Creates and returns a dictionary based on the given `items`.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.584653" elapsed="0.000510"/>
+</kw>
+<kw name="Create List" owner="BuiltIn">
+<msg time="2026-09-23T11:01:44.585462" level="INFO">@{body} = [ {'id': 1, 'name': 'Stub', 'last_name': 'Taxpayer', 'tax_id': 'mock_tax_number', 'tax_amount': 0.0} ]</msg>
+<var>@{body}</var>
+<arg>${record}</arg>
+<doc>Creates and returns a list containing the given items.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.585248" elapsed="0.000233"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-09-23T11:01:44.585772" level="INFO">&amp;{response_headers} = { Content-Type=application/json }</msg>
+<var>&amp;{response_headers}</var>
+<arg>Content-Type=application/json</arg>
+<doc>Creates and returns a dictionary based on the given `items`.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.585579" elapsed="0.000208"/>
+</kw>
+<kw name="Create Mock Response" owner="WireMockLibrary">
+<msg time="2026-09-23T11:01:44.586049" level="INFO">${response} = {'status': 200, 'headers': {'Content-Type': 'application/json'}, 'jsonBody': [{'id': 1, 'name': 'Stub', 'last_name': 'Taxpayer', 'tax_id': 'mock_tax_number', 'tax_amount': 0.0}]}</msg>
+<var>${response}</var>
+<arg>${200}</arg>
+<arg>headers=${response_headers}</arg>
+<arg>json_body=${body}</arg>
+<doc>Creates a mock response to be used by wiremock.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.585853" elapsed="0.000212"/>
+</kw>
+<kw name="Create Mock Mapping" owner="WireMockLibrary">
+<arg>${request}</arg>
+<arg>${response}</arg>
+<doc>Creates an mapping to be used by wiremock.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.586131" elapsed="0.135249"/>
+</kw>
+<doc>Any GET /taxes, whatever the query string, returns one record whose
+tax_id is mock_tax_number.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.584256" elapsed="0.137258"/>
+</kw>
 <kw name="Login As Admin And User" owner="api">
 <kw name="Create API Session" owner="api">
 <kw name="Create Session" owner="RequestsLibrary">
-<msg time="2026-09-23T06:26:40.368448" level="INFO">Creating Session using : alias=aut, url=http://127.0.0.1:8000, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<msg time="2026-09-23T11:01:44.722603" level="INFO">Creating Session using : alias=aut, url=http://127.0.0.1:8000, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
 <arg>${SESSION}</arg>
 <arg>${BASE_URL}</arg>
 <doc>Create Session: create a HTTP session to a server</doc>
-<status status="PASS" start="2026-09-23T06:26:40.368448" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T11:01:44.722490" elapsed="0.000254"/>
 </kw>
-<status status="PASS" start="2026-09-23T06:26:40.368448" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T11:01:44.722351" elapsed="0.000448"/>
 </kw>
 <kw name="Get Auth Token" owner="api">
 <kw name="Create Dictionary" owner="BuiltIn">
-<msg time="2026-09-23T06:26:40.368448" level="INFO">&amp;{form} = { username=admin | password=admin }</msg>
+<msg time="2026-09-23T11:01:44.723473" level="INFO">&amp;{form} = { username=admin | password=admin }</msg>
 <var>&amp;{form}</var>
 <arg>username=${username}</arg>
 <arg>password=${password}</arg>
 <doc>Creates and returns a dictionary based on the given `items`.</doc>
-<status status="PASS" start="2026-09-23T06:26:40.368448" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T11:01:44.723148" elapsed="0.000349"/>
 </kw>
 <kw name="POST On Session" owner="RequestsLibrary">
-<msg time="2026-09-23T06:26:42.425517" level="WARN">Retrying (RetryAdapter(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFD3D6ED0&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /token</msg>
-<msg time="2026-09-23T06:26:44.664885" level="WARN">Retrying (RetryAdapter(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFA431090&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /token</msg>
-<msg time="2026-09-23T06:26:47.116019" level="WARN">Retrying (RetryAdapter(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFA431E10&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /token</msg>
-<msg time="2026-09-23T06:26:49.153939" level="FAIL">ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</msg>
+<msg time="2026-09-23T11:01:44.807870" level="INFO">POST Request : url=http://127.0.0.1:8000/token 
+ path_url=/token 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '29', 'Content-Type': 'application/x-www-form-urlencoded'} 
+ body=username=admin&amp;password=admin 
+ </msg>
+<msg time="2026-09-23T11:01:44.807947" level="INFO">POST Response : url=http://127.0.0.1:8000/token 
+ status=200, reason=OK 
+ headers={'date': 'Wed, 23 Sep 2026 09:01:44 GMT', 'server': 'uvicorn', 'content-length': '185', 'content-type': 'application/json'} 
+ body={"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDE1NTkwNH0.D-YB60hI2E08ajwqM2Kp8vGdopGDN71x60hGKlTAbCs","token_type":"bearer"} 
+ </msg>
+<msg time="2026-09-23T11:01:44.808227" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
 <var>${resp}</var>
 <arg>${SESSION}</arg>
 <arg>/token</arg>
 <arg>data=&amp;{form}</arg>
 <arg>expected_status=200</arg>
 <doc>Sends a POST request on a previously created HTTP Session.</doc>
-<status status="FAIL" start="2026-09-23T06:26:40.368448" elapsed="8.889646">ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
+<status status="PASS" start="2026-09-23T11:01:44.723622" elapsed="0.084637"/>
 </kw>
 <return>
 <value>${resp.json()}[access_token]</value>
-<status status="NOT RUN" start="2026-09-23T06:26:49.258094" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T11:01:44.808331" elapsed="0.000084"/>
 </return>
+<msg time="2026-09-23T11:01:44.808636" level="INFO">${admin_token} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDE1NTkwNH0.D-YB60hI2E08ajwqM2Kp8vGdopGDN71x60hGKlTAbCs</msg>
 <var>${admin_token}</var>
 <arg>${ADMIN_USER}</arg>
 <arg>${ADMIN_PASSWORD}</arg>
 <doc>Logs in via POST /token and returns the JWT access token.</doc>
-<status status="FAIL" start="2026-09-23T06:26:40.368448" elapsed="8.889646">ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
+<status status="PASS" start="2026-09-23T11:01:44.722941" elapsed="0.085718"/>
 </kw>
 <kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-09-23T11:01:44.809127" level="INFO">${ADMIN_TOKEN} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDE1NTkwNH0.D-YB60hI2E08ajwqM2Kp8vGdopGDN71x60hGKlTAbCs</msg>
 <arg>${ADMIN_TOKEN}</arg>
 <arg>${admin_token}</arg>
 <doc>Makes the variable available everywhere within the scope of the current suite.</doc>
-<status status="NOT RUN" start="2026-09-23T06:26:49.258094" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T11:01:44.808816" elapsed="0.000343"/>
 </kw>
 <kw name="Get Auth Token" owner="api">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-09-23T11:01:44.809763" level="INFO">&amp;{form} = { username=user | password=user }</msg>
+<var>&amp;{form}</var>
+<arg>username=${username}</arg>
+<arg>password=${password}</arg>
+<doc>Creates and returns a dictionary based on the given `items`.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.809526" elapsed="0.000256"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-09-23T11:01:44.891101" level="INFO">POST Request : url=http://127.0.0.1:8000/token 
+ path_url=/token 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '27', 'Content-Type': 'application/x-www-form-urlencoded'} 
+ body=username=user&amp;password=user 
+ </msg>
+<msg time="2026-09-23T11:01:44.891173" level="INFO">POST Response : url=http://127.0.0.1:8000/token 
+ status=200, reason=OK 
+ headers={'date': 'Wed, 23 Sep 2026 09:01:44 GMT', 'server': 'uvicorn', 'content-length': '182', 'content-type': 'application/json'} 
+ body={"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6InVzZXIiLCJleHAiOjE3OTAxNTU5MDR9.vgKtQzK1Rli1FrG_gKQPCh-rHp3idAFzRLmdpEZzB_k","token_type":"bearer"} 
+ </msg>
+<msg time="2026-09-23T11:01:44.891271" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>${SESSION}</arg>
+<arg>/token</arg>
+<arg>data=&amp;{form}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.809866" elapsed="0.081425"/>
+</kw>
+<return>
+<value>${resp.json()}[access_token]</value>
+<status status="PASS" start="2026-09-23T11:01:44.891352" elapsed="0.000043"/>
+</return>
+<msg time="2026-09-23T11:01:44.891598" level="INFO">${user_token} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6InVzZXIiLCJleHAiOjE3OTAxNTU5MDR9.vgKtQzK1Rli1FrG_gKQPCh-rHp3idAFzRLmdpEZzB_k</msg>
 <var>${user_token}</var>
 <arg>${TEST_USER}</arg>
 <arg>${TEST_PASSWORD}</arg>
 <doc>Logs in via POST /token and returns the JWT access token.</doc>
-<status status="NOT RUN" start="2026-09-23T06:26:49.258094" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T11:01:44.809332" elapsed="0.082289"/>
 </kw>
 <kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-09-23T11:01:44.892065" level="INFO">${USER_TOKEN} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6InVzZXIiLCJleHAiOjE3OTAxNTU5MDR9.vgKtQzK1Rli1FrG_gKQPCh-rHp3idAFzRLmdpEZzB_k</msg>
 <arg>${USER_TOKEN}</arg>
 <arg>${user_token}</arg>
 <doc>Makes the variable available everywhere within the scope of the current suite.</doc>
-<status status="NOT RUN" start="2026-09-23T06:26:49.258094" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T11:01:44.891787" elapsed="0.000308"/>
 </kw>
 <doc>Creates the API session and logs in as both the admin and the
 read-only user, exposing ${ADMIN_TOKEN} / ${USER_TOKEN} as suite
 variables so test cases in any suite can reuse them.</doc>
-<status status="FAIL" start="2026-09-23T06:26:40.368448" elapsed="8.889646">ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
+<status status="PASS" start="2026-09-23T11:01:44.722152" elapsed="0.169997"/>
 </kw>
 <kw name="Reset Database" owner="api">
+<kw name="Auth Headers" owner="api">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-09-23T11:01:44.892996" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDE1NTkwNH0.D-YB60hI2E08ajwqM2Kp8vGdopGDN71x60hGKlTAbCs }</msg>
+<var>&amp;{headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given `items`.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.892695" elapsed="0.000323"/>
+</kw>
+<return>
+<value>&amp;{headers}</value>
+<status status="PASS" start="2026-09-23T11:01:44.893058" elapsed="0.000028"/>
+</return>
+<msg time="2026-09-23T11:01:44.893192" level="INFO">&amp;{headers} = { Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDE1NTkwNH0.D-YB60hI2E08ajwqM2Kp8vGdopGDN71x60hGKlTAbCs }</msg>
+<var>&amp;{headers}</var>
+<arg>${admin_token}</arg>
+<doc>Builds an Authorization header dictionary for the given token.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.892477" elapsed="0.000737"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-09-23T11:01:44.911696" level="INFO">POST Request : url=http://127.0.0.1:8000/reset 
+ path_url=/reset 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDE1NTkwNH0.D-YB60hI2E08ajwqM2Kp8vGdopGDN71x60hGKlTAbCs', 'Content-Length': '0'} 
+ body=None 
+ </msg>
+<msg time="2026-09-23T11:01:44.911760" level="INFO">POST Response : url=http://127.0.0.1:8000/reset 
+ status=200, reason=OK 
+ headers={'date': 'Wed, 23 Sep 2026 09:01:44 GMT', 'server': 'uvicorn', 'content-length': '18', 'content-type': 'application/json'} 
+ body={"status":"reset"} 
+ </msg>
+<arg>${SESSION}</arg>
+<arg>/reset</arg>
+<arg>headers=&amp;{headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.893298" elapsed="0.018518"/>
+</kw>
 <arg>${ADMIN_TOKEN}</arg>
 <doc>Wipes and re-seeds the AUT's in-memory database (admin only).</doc>
-<status status="NOT RUN" start="2026-09-23T06:26:49.258094" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T11:01:44.892279" elapsed="0.019605"/>
 </kw>
-<status status="FAIL" start="2026-09-23T06:26:40.368448" elapsed="8.889646">ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
+<status status="PASS" start="2026-09-23T11:01:44.560083" elapsed="0.351836"/>
 </kw>
-<test id="s1-t1" name="GET Persons Without Token Should Be Unauthorized" line="12">
-<doc>/persons requires authentication.</doc>
-<status status="FAIL" start="2026-09-23T06:26:49.258094" elapsed="0.000000">Parent suite setup failed:
-ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
+<test id="s1-t1" name="Person Tax Lookup Should Return Data From Tax Service Stub" line="22">
+<kw name="Reset Request Log" owner="WireMockLibrary" type="SETUP">
+<msg time="2026-09-23T11:01:44.915878" level="FAIL">Wiremock failed with 404: </msg>
+<doc>Resets all logged requests on the wiremock server.</doc>
+<status status="FAIL" start="2026-09-23T11:01:44.912505" elapsed="0.005016">Wiremock failed with 404: </status>
+</kw>
+<doc>John Smith (id 1) has TAX_ID TAX-1001. The person service asks the
+tax service for it, and WireMock's answer comes back unchanged.</doc>
+<status status="FAIL" start="2026-09-23T11:01:44.911978" elapsed="0.005798">Setup failed:
+Wiremock failed with 404: </status>
 </test>
-<test id="s1-t2" name="GET Persons As Read Only User Should Succeed" line="16">
-<doc>The read-only "user" account can GET, per the role rules.</doc>
-<status status="FAIL" start="2026-09-23T06:26:49.258094" elapsed="0.000000">Parent suite setup failed:
-ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
-</test>
-<test id="s1-t3" name="GET Persons As Admin Should Succeed" line="23">
-<doc>The admin account can GET too, not just write.</doc>
-<status status="FAIL" start="2026-09-23T06:26:49.258094" elapsed="0.000000">Parent suite setup failed:
-ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
-</test>
-<test id="s1-t4" name="GET Persons Should Return Seeded Persons With Nested Address" line="28">
-<doc>Response shape: each person embeds its full address, not just an id,
-and the seeded dataset (from POST /reset) is present.</doc>
-<status status="FAIL" start="2026-09-23T06:26:49.258094" elapsed="0.000000">Parent suite setup failed:
-ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
-</test>
-<kw name="Delete All Sessions" owner="RequestsLibrary" type="TEARDOWN">
-<msg time="2026-09-23T06:26:49.258094" level="INFO">Deleting All Sessions</msg>
+<kw name="Teardown Stubbed Environment" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-09-23T11:01:44.918489" level="INFO">Deleting All Sessions</msg>
 <doc>Removes all the session objects </doc>
-<status status="PASS" start="2026-09-23T06:26:49.258094" elapsed="0.000000"/>
+<status status="PASS" start="2026-09-23T11:01:44.918437" elapsed="0.000102"/>
 </kw>
-<doc>Tests for GET /persons on the Customer DB AUT.
-Requires the AUT to be running at http://127.0.0.1:8000 (see AUT/README.md).</doc>
-<status status="FAIL" start="2026-09-23T06:26:40.177245" elapsed="9.080849">Suite setup failed:
-ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /token (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFDF8D490&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))</status>
+<kw name="Terminate Process" owner="Process">
+<msg time="2026-09-23T11:01:44.918790" level="INFO">Gracefully terminating process.</msg>
+<msg time="2026-09-23T11:01:45.020222" level="INFO">Process completed.</msg>
+<arg>wiremock</arg>
+<doc>Stops the process gracefully or forcefully.</doc>
+<status status="PASS" start="2026-09-23T11:01:44.918614" elapsed="0.101732"/>
+</kw>
+<status status="PASS" start="2026-09-23T11:01:44.918299" elapsed="0.102132"/>
+</kw>
+<doc>Tests the person service's tax lookup (GET /persons/{id}/tax) with the
+TaxInformation service replaced by WireMock, which always answers with
+tax_id "mock_tax_number".
+Requires the customer DB (run.py) at http://127.0.0.1:8000 and Java on PATH.
+The real tax service (run_tax.py) must NOT be running: WireMock takes
+its port, 8001, which is where the person service looks for it.</doc>
+<status status="FAIL" start="2026-09-23T11:01:44.409424" elapsed="0.611059"/>
 </suite>
 <statistics>
 <total>
-<stat pass="0" fail="4" skip="0">All Tests</stat>
+<stat pass="0" fail="1" skip="0">All Tests</stat>
 </total>
 <tag>
 </tag>
 <suite>
-<stat name="Get Persons" id="s1" pass="0" fail="4" skip="0">Get Persons</stat>
+<stat name="Test With Stub" id="s1" pass="0" fail="1" skip="0">Test With Stub</stat>
 </suite>
 </statistics>
 <errors>
-<msg time="2026-09-23T06:26:42.425517" level="WARN">Retrying (RetryAdapter(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFD3D6ED0&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /token</msg>
-<msg time="2026-09-23T06:26:44.664885" level="WARN">Retrying (RetryAdapter(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFA431090&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /token</msg>
-<msg time="2026-09-23T06:26:47.116019" level="WARN">Retrying (RetryAdapter(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x000001ECFA431E10&gt;: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /token</msg>
 </errors>
 </robot>

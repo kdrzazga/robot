@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from app import auth, models, schemas
 from app.auth import get_current_user, oauth2_scheme, require_admin
-from app.tax_client import fetch_tax_record
+from app.tax_client import fetch_tax_record, list_tax_records, update_tax_record
 from app.database import Base, SessionLocal, engine, get_db
 from app.seed import seed_data
 
@@ -201,3 +201,22 @@ def delete_person(
     db.delete(db_person)
     db.commit()
     return None
+
+
+# --- Tax endpoints (pass-through to the TaxInformation service) ---
+# The browser UI only talks to this service; these forward to TAX_SERVICE_URL
+# with the caller's token, and the tax service enforces its own rules.
+
+@app.get("/taxes", response_model=List[schemas.TaxRecord], tags=["taxes"])
+def list_taxes(token: str = Depends(oauth2_scheme), _user=Depends(get_current_user)):
+    return list_tax_records(token)
+
+
+@app.put("/taxes/{tax_record_id}", response_model=schemas.TaxRecord, tags=["taxes"])
+def update_tax(
+    tax_record_id: int,
+    tax: schemas.TaxRecordUpdate,
+    token: str = Depends(oauth2_scheme),
+    _admin=Depends(require_admin),
+):
+    return update_tax_record(tax_record_id, tax.model_dump(), token)
